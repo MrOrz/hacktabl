@@ -1,7 +1,7 @@
 hacktabl.org
 ================
 
-[![Build Status](https://travis-ci.org/MrOrz/hacktabl.svg?branch=dev)](https://travis-ci.org/MrOrz/hacktabl)
+[![Build Status](https://travis-ci.org/g0v/hacktabl.svg?branch=dev)](https://travis-ci.org/g0v/hacktabl)
 
 A site to publish cooperative comparison table in Google Doc, using [Ethercalc](http://ethercalc.org) to host the table configuration.
 
