@@ -63,6 +63,13 @@ div(ng-click="App.State.titlebar='title'"
 
   main#main.container(ng-switch-default)
 
+    //- Header row
+    header.row-position-title: .container: .row.l-row
+      .col-xs-1.l-col(
+        ng-style="{width: 100/(App.Column.size())+'%'}"
+        ng-repeat="title in ::App.data.positionTitle | filter: App.filterColumns")
+        h4(vu-compile tmpl="::title")
+
     section.scroll-anchor-container(ng-repeat="row in ::App.data.perspectives" ng-cloak)
       a.scroll-anchor(id="{{::row.title}}" vu-spy="row.title")
       .row.col-xs-12
@@ -70,9 +77,9 @@ div(ng-click="App.State.titlebar='title'"
 
       .row.l-row
         .col-xs-1.l-col(
-          ng-repeat="positions in ::row.positions"
+          ng-repeat="positions in ::row.positions | filter: App.filterColumns"
           ng-switch="::positions.length"
-          ng-style="{width: 100/row.positions.length+'%'}")
+          ng-style="{width: 100/App.Column.size()+'%'}")
           h3(vu-compile tmpl="::App.data.positionTitle[$index]")
           div(ng-switch-default)
             ul
@@ -89,12 +96,12 @@ div(ng-click="App.State.titlebar='title'"
 
     //- Header row
     header.row-position-title: .container: .row.l-row
-      .col-xs-1.l-col(ng-style="{width: 100/(App.data.positionTitle.length+1)+'%'}")
+      .col-xs-1.l-col(ng-style="{width: 100/(App.Column.size()+1)+'%'}")
         h4 面向 ＼ 立場
 
       .col-xs-1.l-col(
-        ng-style="{width: 100/(App.data.positionTitle.length+1)+'%'}"
-        ng-repeat="title in ::App.data.positionTitle")
+        ng-style="{width: 100/(App.Column.size()+1)+'%'}"
+        ng-repeat="title in ::App.data.positionTitle | filter: App.filterColumns")
         h4(vu-compile tmpl="::title")
 
     //- Content rows
@@ -108,16 +115,16 @@ div(ng-click="App.State.titlebar='title'"
       .row.l-row
         //- Perspective title
         .col-xs-1.l-col.col-perspective-title(
-          ng-style="{width: 100/(row.positions.length+1)+'%'}"
+          ng-style="{width: 100/(App.Column.size()+1)+'%'}"
           ng-click="TableRow.toggleExpand()")
 
           h2(vu-compile tmpl="::row.titleHtml")
 
         //- Arguments of the perspective
         .col-xs-1.l-col(
-          ng-repeat="positions in ::row.positions"
+          ng-repeat="positions in ::row.positions | filter: App.filterColumns"
           ng-switch="::positions.debateArguments.length"
-          ng-style="{width: 100/(row.positions.length+1)+'%'}")
+          ng-style="{width: 100/(App.Column.size()+1)+'%'}")
 
           div(ng-switch-default)
             h3(ng-click="TableRow.toggleExpand()")

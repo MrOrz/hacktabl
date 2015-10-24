@@ -14,8 +14,8 @@ const IS_PRERENDERING = typeof(__prerender) is \function
 
 angular.module \app.controller, <[app.constant app.service ga app.router]>
 .controller \AppCtrl, <[
-       TableData Spy  State  EtherCalcData  $anchorScroll  $timeout  ERRORS  $modal  $window  $routeParams
-]> ++ (data,     Spy, State, EtherCalcData, $anchorScroll, $timeout, ERRORS, $modal, $window, $routeParams)!->
+       TableData Spy  State  EtherCalcData  $anchorScroll  $timeout  ERRORS  $modal  $window  $routeParams  Column
+]> ++ (data,     Spy, State, EtherCalcData, $anchorScroll, $timeout, ERRORS, $modal, $window, $routeParams, Column)!->
 
   data.then (d) ~>
     @data = d
@@ -30,6 +30,11 @@ angular.module \app.controller, <[app.constant app.service ga app.router]>
     # If window.__prerender exists, invoke it
     if IS_PRERENDERING
       $window.__prerender $window
+
+    # If there is no columns included, show all columns by default
+    #
+    if Column.size() == 0
+      Column.set([i for i from 0 to d.positionTitle.length-1])
 
   .catch (reason) ~>
 
@@ -58,6 +63,11 @@ angular.module \app.controller, <[app.constant app.service ga app.router]>
     @TITLE = data.TITLE
     @LAYOUT_TYPE = data.TYPE
     @EMPHASIZE_NO_REF = data.EMPHASIZE_NO_REF
+
+  @Column = Column
+
+  @filterColumns = (val, idx, arr) ~>
+    Column.includes(idx)
 
 .controller \ErrorModalCtrl, <[
        $window  $routeParams  reason  EtherCalcData

@@ -639,3 +639,37 @@ angular.module \app.service, <[ngSanitize ga ui.bootstrap.selected app.router ap
 
       local-storage.visited = JSON.stringify history-data
       reload-data!
+
+.factory \Column, <[
+       EtherCalcData  $routeParams
+]> ++ (EtherCalcData, $routeParams) ->
+  columns = []
+  id = $routeParams.id
+
+  fetch-from-localstorage = ->
+    column-data = {}
+    if local-storage.column-data
+      column-data = JSON.parse(local-storage.column-data)
+    return column-data
+
+  column-data = fetch-from-localstorage!
+  if column-data[id]
+    columns := column-data[id]
+
+  return do
+    get: ->
+      return columns
+
+    includes: (id) ->
+      return columns.index-of(id) != -1
+
+    size: ->
+      return columns.length
+
+    set: (new-columns) ->
+      columns := new-columns
+
+      column-data = fetch-from-localstorage!
+      column-data[id] = columns
+
+      local-storage.column-data = JSON.stringify(column-data)
