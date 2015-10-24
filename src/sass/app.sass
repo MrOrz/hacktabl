@@ -143,8 +143,11 @@ body
     // Use position: fixed to break through overflow: hidden of .titlebar-container
     position: fixed
     left: 50%
-    margin-left: -5rem // Fine-tuned to align the button...
-    margin-top: -0.5rem
+    max-height: 80vh
+
+    // Fine-tuned to align the button...
+    transform: translate(-50%, -0.5rem)
+    overflow-y: auto
 
 .main-loading
   margin: $line-height 0
