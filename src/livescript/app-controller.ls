@@ -34,10 +34,9 @@ angular.module \app.controller, <[app.constant app.service ga app.router]>
     # If there is no columns included, show all columns by default
     #
     if Column.size() == 0
-      Column.set([i for i from 0 to d.positionTitle.length-1])
+      Column.set([''+i for i from 0 to d.positionTitle.length-1])
 
     @data = d
-    console.log "DIGESTING!", @Column.get()
     $scope.$digest!
 
   .catch (reason) ~>
@@ -215,5 +214,5 @@ angular.module \app.controller, <[app.constant app.service ga app.router]>
     @data = d
 
   @handleConfirmButton = !~>
-    Column.set [columnId for columnId, isSelected of @model when isSelected]
+    Column.set [''+columnId for columnId, isSelected of @model when isSelected]
     $scope.$close!
