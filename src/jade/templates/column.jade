@@ -1,0 +1,10 @@
+.modal-header
+  h3.modal-title 要顯示的欄位
+.modal-body
+  ul.list-unstyled(ng-repeat="title in ::ColumnModal.data.positionTitle")
+    li.checkbox
+      label
+        input(type="checkbox" ng-model="ColumnModal.model[$index]")
+        span(vu-compile tmpl="::title")
+.modal-footer
+  button.btn.btn-lg.btn-primary(type="button" ng-click="ColumnModal.handleConfirmButton()") 確定

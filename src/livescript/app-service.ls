@@ -643,8 +643,8 @@ angular.module \app.service, <[ngSanitize ga ui.bootstrap.selected app.router ap
 .factory \Column, <[
        EtherCalcData  $routeParams
 ]> ++ (EtherCalcData, $routeParams) ->
-  columns = []
-  id = $routeParams.id
+  columns = []          # Column IDs th show
+  id = $routeParams.idx # hacktabl ID, like "president2016"
 
   fetch-from-localstorage = ->
     column-data = {}

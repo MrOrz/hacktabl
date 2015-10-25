@@ -4,6 +4,7 @@ require './app-service'
 require './app-router'
 
 require('ngtemplate?relativeTo=templates/!html!jade-html!../jade/templates/info.jade')
+require('ngtemplate?relativeTo=templates/!html!jade-html!../jade/templates/column.jade')
 
 require('ngtemplate?relativeTo=errors/!html!jade-html!../jade/errors/no-ethercalc.jade')
 require('ngtemplate?relativeTo=errors/!html!jade-html!../jade/errors/no-doc-info.jade')
@@ -14,11 +15,10 @@ const IS_PRERENDERING = typeof(__prerender) is \function
 
 angular.module \app.controller, <[app.constant app.service ga app.router]>
 .controller \AppCtrl, <[
-       TableData Spy  State  EtherCalcData  $anchorScroll  $timeout  ERRORS  $modal  $window  $routeParams  Column
-]> ++ (data,     Spy, State, EtherCalcData, $anchorScroll, $timeout, ERRORS, $modal, $window, $routeParams, Column)!->
+       TableData Spy  State  EtherCalcData  $anchorScroll  $timeout  ERRORS  $modal  $window  $routeParams  Column  $scope
+]> ++ (data,     Spy, State, EtherCalcData, $anchorScroll, $timeout, ERRORS, $modal, $window, $routeParams, Column, $scope)!->
 
   data.then (d) ~>
-    @data = d
     if $routeParams.perspective
       @data.perspectives = @data.perspectives.filter (perspective) ->
         perspective.title == $routeParams.perspective
@@ -35,6 +35,10 @@ angular.module \app.controller, <[app.constant app.service ga app.router]>
     #
     if Column.size() == 0
       Column.set([i for i from 0 to d.positionTitle.length-1])
+
+    @data = d
+    console.log "DIGESTING!", @Column.get()
+    $scope.$digest!
 
   .catch (reason) ~>
 
@@ -67,7 +71,12 @@ angular.module \app.controller, <[app.constant app.service ga app.router]>
   @Column = Column
 
   @filterColumns = (val, idx, arr) ~>
-    Column.includes(idx)
+    Column.includes(''+idx)
+
+  @openColumnModal = ->
+    $modal.open do
+      templateUrl: 'column.jade'
+      controller: 'ColumnModalCtrl as ColumnModal'
 
 .controller \ErrorModalCtrl, <[
        $window  $routeParams  reason  EtherCalcData
@@ -196,3 +205,15 @@ angular.module \app.controller, <[app.constant app.service ga app.router]>
 
   @toggle-expand = !~>
     @is-expanded = !@is-expanded
+
+.controller \ColumnModalCtrl, <[
+       Column  TableData $scope
+]> ++ (Column, data,     $scope) !->
+  @model = {[columnId, true] for columnId in Column.get()}
+
+  data.then (d) !~>
+    @data = d
+
+  @handleConfirmButton = !~>
+    Column.set [columnId for columnId, isSelected of @model when isSelected]
+    $scope.$close!

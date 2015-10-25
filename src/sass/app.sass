@@ -51,8 +51,8 @@ body
     + *
       padding-top: $h
 
-    + .is-table
-      padding-top: $h + 3*$line-height // 3 line height = height of table header row
+    + .scroll-anchor-container
+      padding-top: $h + 2*$line-height // 2 line height = height of table header row
 
     // Make containing block the same height of #header.
     .containing-block
@@ -165,6 +165,42 @@ body
   @media screen and (min-width: $screen-sm-min)
     top: -3 * $line-height + rem-calc(1px) // Height of the fixed header, minus 1px space
     bottom: 3 * $line-height
+
+.row-position-title
+  cursor: pointer
+  background: $gray
+  z-index: $zindex-navbar-fixed
+  opacity: .95
+  position: fixed
+  left: 0
+  right: 0
+  top: 2 * $line-height
+
+  @media screen and (min-width: $screen-sm-min)
+    top: 3 * $line-height
+
+  h4
+    margin: 0
+    color: $gray-darker
+  .l-row
+    border: 0
+    padding: 0.5 * $line-height
+
+  .menuicon
+    position: absolute
+    color: $gray-darker
+    right: 4px
+    top: 50%
+    transform: translateY(-50%)
+
+  // &:after
+  //   content: '⁝'
+  //   position: absolute
+  //   color: $gray-darker
+  //   font-size: 32px
+  //   right: 4px
+  //   top: 50%
+  //   transform: translateY(-50%)
 
 // Table row layout
 //
@@ -291,24 +327,6 @@ body
     font-family: $font-family-serif
     color: $brand-success
     letter-spacing: 0.2rem
-
-  .row-position-title
-    background: $gray
-    z-index: $zindex-navbar-fixed
-    opacity: .95
-    position: fixed
-    left: 0
-    right: 0
-    top: 2 * $line-height
-
-    @media screen and (min-width: $screen-sm-min)
-      top: 3 * $line-height
-
-    h4
-      margin: 0
-      color: $gray-darker
-    .l-row
-      border: 0
 
   .empty-summary
     color: $gray-dark

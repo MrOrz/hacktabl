@@ -64,26 +64,26 @@ div(ng-click="App.State.titlebar='title'"
   main#main.container(ng-switch-default)
 
     //- Header row
-    header.row-position-title: .container: .row.l-row
+    header.row-position-title(ng-click="App.openColumnModal()"): .container: .row.l-row
+      span.menuicon.glyphicon.glyphicon-option-vertical
       .col-xs-1.l-col(
         ng-style="{width: 100/(App.Column.size())+'%'}"
-        ng-repeat="title in ::App.data.positionTitle | filter: App.filterColumns")
+        ng-repeat="title in App.data.positionTitle | filter: App.filterColumns")
         h4(vu-compile tmpl="::title")
 
-    section.scroll-anchor-container(ng-repeat="row in ::App.data.perspectives" ng-cloak)
+    section.scroll-anchor-container(ng-repeat="row in App.data.perspectives" ng-cloak)
       a.scroll-anchor(id="{{::row.title}}" vu-spy="row.title")
       .row.col-xs-12
         h2(vu-compile tmpl="::row.titleHtml")
 
       .row.l-row
         .col-xs-1.l-col(
-          ng-repeat="positions in ::row.positions | filter: App.filterColumns"
+          ng-repeat="positions in row.positions | filter: App.filterColumns"
           ng-switch="::positions.length"
           ng-style="{width: 100/App.Column.size()+'%'}")
-          h3(vu-compile tmpl="::App.data.positionTitle[$index]")
           div(ng-switch-default)
             ul
-              li(ng-repeat="argument in ::positions.debateArguments" ng-class="{'has-ref':!!argument.ref, 'has-no-ref': App.EMPHASIZE_NO_REF && !argument.ref}" vu-track="{perspective: row.title, position: 0, content: argument.content}")
+              li(ng-repeat="argument in positions.debateArguments" ng-class="{'has-ref':!!argument.ref, 'has-no-ref': App.EMPHASIZE_NO_REF && !argument.ref}" vu-track="{perspective: row.title, position: 0, content: argument.content}")
                 small.label.label-default(ng-repeat="label in ::argument.labels" ng-if="App.State.labels") {{label}}
                 div.content(vu-compile tmpl="::argument.content")
                 div.ref(vu-compile tmpl="::argument.ref")
@@ -95,19 +95,20 @@ div(ng-click="App.State.titlebar='title'"
   main#main.l-table(ng-switch-when="TABLE")
 
     //- Header row
-    header.row-position-title: .container: .row.l-row
+    header.row-position-title(ng-click="App.openColumnModal()"): .container: .row.l-row
+      span.menuicon.glyphicon.glyphicon-option-vertical
       .col-xs-1.l-col(ng-style="{width: 100/(App.Column.size()+1)+'%'}")
         h4 面向 ＼ 立場
 
       .col-xs-1.l-col(
         ng-style="{width: 100/(App.Column.size()+1)+'%'}"
-        ng-repeat="title in ::App.data.positionTitle | filter: App.filterColumns")
+        ng-repeat="title in App.data.positionTitle | filter: App.filterColumns")
         h4(vu-compile tmpl="::title")
 
     //- Content rows
     section.container.scroll-anchor-container(
       ng-cloak
-      ng-repeat="row in ::App.data.perspectives"
+      ng-repeat="row in App.data.perspectives"
       ng-controller="TableRowCtrl as TableRow")
 
       a.scroll-anchor(id="{{::row.title}}" vu-spy="row.title")
@@ -145,7 +146,7 @@ div(ng-click="App.State.titlebar='title'"
           div(ng-switch-when="0"): .column-empty(ng-include="'empty.jade'" vu-track="{label: 'item.edit', perspective: row.title, position: 0}")
 
 
-  div.container: div.main-loading.alert.alert-info.text-center(ng-hide="::App.data") Loading
+  div.container: div.main-loading.alert.alert-info.text-center(ng-hide="App.data") Loading
 
   #edit.container: .row: .col-lg-4.col-lg-offset-4.col-xs-8.col-xs-offset-2
     a.btn.btn-primary.btn-lg.btn-block(
