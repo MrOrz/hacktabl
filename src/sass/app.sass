@@ -158,13 +158,13 @@ body
 
 .scroll-anchor
   +stretch
-  top: -2 * $line-height + rem-calc(1px) // Height of the fixed header, minus 1px space
-  bottom: 2 * $line-height
+  top: -4 * $line-height + rem-calc(1px) // Height of the fixed header, minus 1px space
+  bottom: 4 * $line-height
   z-index: -1 // Do not block input
 
   @media screen and (min-width: $screen-sm-min)
-    top: -3 * $line-height + rem-calc(1px) // Height of the fixed header, minus 1px space
-    bottom: 3 * $line-height
+    top: -5 * $line-height + rem-calc(1px) // Height of the fixed header, minus 1px space
+    bottom: 5 * $line-height
 
 .row-position-title
   cursor: pointer
