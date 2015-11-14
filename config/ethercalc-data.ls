@@ -5,3 +5,5 @@ module.exports =
     INFO_URL:  'https://compatable.hackpad.com/ep/pad/static/M2DkEbVwlCI'
     TYPE: ''
     EMPHASIZE_NO_REF:  1
+    LINE_LIMIT_DESKTOP: 4
+    LINE_LIMIT: 6

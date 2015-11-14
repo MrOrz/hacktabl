@@ -209,15 +209,31 @@ body
   border-bottom: rem-calc(1px) dashed $brand-success
 
   ul
-    padding-left: 1.35rem // Tweaked. Magic.
+    padding-left: 0
     margin-bottom: 0
 
   li
+    list-style-position: inside
     position: relative // For the pseudo element
     margin-bottom: $line-height * .5
     z-index: 0
+    overflow: hidden
     +transition(z-index 0.2s)
     +transition-delay(0)
+
+    &:before
+      content: ''
+      position: absolute
+      left: 0
+      right: 0
+      height: $line-height * 1
+      +background-image(linear-gradient(rgba(#fff, 0), rgba(#fff, .65) 33%, rgba(#fff, 1)));
+
+    &:hover
+      overflow: visible
+
+    &:hover:before
+      display: none
 
   li.has-ref
     $delay: 0.5s

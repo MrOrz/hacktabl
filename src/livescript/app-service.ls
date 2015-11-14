@@ -412,8 +412,8 @@ angular.module \app.service, <[ngSanitize ga ui.bootstrap.selected app.router ap
 
 
 .factory \EtherCalcData, <[
-       $rootScope  $http  $q  ERRORS
-]> ++ ($rootScope, $http, $q, ERRORS) ->
+       $rootScope  $http  $q  ERRORS  STYLE
+]> ++ ($rootScope, $http, $q, ERRORS, STYLE) ->
 
   return new Promise (resolve, reject) !~>
 
@@ -459,6 +459,24 @@ angular.module \app.service, <[ngSanitize ga ui.bootstrap.selected app.router ap
 
     else
       return Promise.reject(ERRORS.NO_DOC_INFO)
+
+    if data.LINE_LIMIT
+      style-elem = document.create-element \style
+      style-elem.innerHTML = "
+        .l-row li:not(:hover) {max-height: #{+data.LINE_LIMIT * STYLE.LINE_HEIGHT}px;}
+        .l-row li:not(:hover):before {top: #{(+data.LINE_LIMIT - 1) * STYLE.LINE_HEIGHT}px;}
+      "
+      document.body.append-child style-elem
+
+    if data.LINE_LIMIT_DESKTOP
+      style-elem = document.create-element \style
+      style-elem.innerHTML = "
+        @media screen and (min-width: 768px) {
+          .l-row li:not(:hover) {max-height: #{+data.LINE_LIMIT_DESKTOP * STYLE.LINE_HEIGHT}px;}
+          .l-row li:not(:hover):before {top: #{(+data.LINE_LIMIT_DESKTOP - 1) * STYLE.LINE_HEIGHT}px;}
+        }
+      "
+      document.body.append-child style-elem
 
     return data
 

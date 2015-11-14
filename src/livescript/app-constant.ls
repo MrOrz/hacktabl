@@ -11,3 +11,6 @@ angular.module \app.constant, []
   NO_ETHERCALC: \NO_ETHERCALC # ethercalc.org/ID not found
   NO_DOC_INFO: \NO_DOC_INFO   # No google doc URL / ID found in ethercalc
   NOT_SHARED: \NOT_SHARED     # Google doc is not shared
+
+.constant \STYLE, do
+  LINE_HEIGHT: 24         # Should match $line-height-px in src/sass/app.sass
