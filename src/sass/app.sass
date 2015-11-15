@@ -1,444 +1,186 @@
 // customize bootstrap variables here:
-@import '_variables'
-@import '~bootstrap-sass/assets/stylesheets/bootstrap.scss'
-@import 'compass/_typography.scss'
-@import 'compass/_css3.scss'
-@import 'compass/layout/_stretching.scss'
+// @import '_variables'
+@import '../../node_modules/material-design-lite/src/material-design-lite.scss'
 
-html
-  font-size: $font-size-base
 
-body
-  // Make sure there is always a scroll on the right.
-  // bootstrap modal needs the scroll to prevent the body from shifting around.
-  overflow-y: scroll
+/**
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-.btn
-  +transition(all ease-in-out .1s)
-  outline: none
-  &:focus, &:focus:active
-    outline: none
-  &::-moz-focus-inner
-    border: 0
+html, body
+  font-family: 'Roboto', 'Helvetica', sans-serif
 
-.btn-primary
+.demo-avatar
+  width: 48px
+  height: 48px
+  border-radius: 24px
+
+.demo-layout .demo-header .mdl-textfield
+  padding: 0px
+  margin-top: 41px
+
+.demo-layout .demo-header .mdl-textfield .mdl-textfield__expandable-holder
+  bottom: 19px
+
+.demo-layout .mdl-layout__header .mdl-layout__drawer-button
+  color: rgba(0, 0, 0, 0.54)
+
+.mdl-layout__drawer .avatar
+  margin-bottom: 16px
+
+.demo-drawer
   border: none
-  +box-shadow(0 4px $brand-primary)
 
-  &:active
-    +translate3d(0, 4px, 0)
-    +box-shadow(0 0 $brand-primary)
+/* iOS Safari specific workaround */
+.demo-drawer .mdl-menu__container
+  z-index: -1
 
-// Override modal-footer
-.modal-body iframe
-  border: 0
-  width: 100%
-  min-height: 400px
+.demo-drawer .demo-navigation
+  z-index: -2
 
-
-#header
-  // Generates containing block layout
-  //
-  .containing-block
-    position: relative
-
-  // All styles that is related to heights of sticky bar
-  =set-heights($line-count)
-    $h:$line-count * $line-height
-    height: $h
-
-    // The element after #header should have enough margin-top
-    + *
-      padding-top: $h
-
-    + .scroll-anchor-container
-      padding-top: $h + 2*$line-height // 2 line height = height of table header row
-
-    // Make containing block the same height of #header.
-    .containing-block
-      height: $h
-
-    h1
-      margin: ($line-count - $line-height-large) * $line-height / 2
-
-    $toolbox-btn-height: ($line-count - 1) * $line-height
-    $toolbox-padding: ($h - $toolbox-btn-height) / 2
-    .toolbox
-      padding-top: $toolbox-padding
-      .btn
-        height: $toolbox-btn-height
-        line-height: $toolbox-btn-height
-
-    .toolbox-btn-group
-      margin-left: $toolbox-padding
-      &:first-child
-        margin-left: 0
-
-    .title.is-prev
-      +translate3d(0, -$h, 0)
-    .title.is-next
-      +translate3d(0, $h, 0)
-
-    .header-left, .header-right
-      padding-top: ($line-count - 1) * $line-height / 2
-
-    .titlebar.ng-leave.ng-leave-active, .titlebar.ng-enter
-      +translate3d(0, $h, 0)
-
-  +set-heights(2) // Mobile sticky bar should be 2 lines high.
-  position: fixed
-  +translate3d(0,0,0) // Confine repaint rectangle
-  top: 0
-  left: 0
-  right: 0
-  background: rgba($brand-primary, .95)
-  color: $body-bg
-  z-index: $zindex-navbar-fixed
-
-  // Set right padding when modal dialog is open.
-  // Otherwise the modal may shift a bit when dialog open/closes.
-  .modal-open &
-    padding-right: inherit // Inherit body's padding-right set by javascript.
-
-  h1
-    font-size: $font-size-large
-    line-height: $line-height-large
-    height: $line-height-large * $line-height
-    position: relative // For the .title inside
-    overflow: hidden  // Hide excessive .title
-
-  .title
-    +stretch
-    +translate3d(0, 0, 0)
-    +transition(all .15s ease-in-out)
-
-  @media screen and (min-width: $screen-sm-min)
-    +set-heights(3)  // Sticky bar on large screens should be 3 lines high.
-
-  .titlebar-container // Cropping the titlebar
-    // Create containing block for the fixed menu
-    +stretch
-    overflow: hidden
-
-  .titlebar
-    +stretch
-    +transition(all .15s ease-in-out)
-
-  .titlebar.ng-leave, .titlebar.ng-enter.ng-enter-active
-    +translate3d(0, 0, 0)
-
-  .toolbox
-    .toolbox-btn-group // Overriding bootstrap btn-group
-      float: none
-      display: inline-block
-    .btn // Overriding bootstrap btn
-      border: 0
-      background: $gray
-      color: $brand-primary
-
-      &:hover
-        background: $gray-dark
-
-  .menu-perspective
-    // Use position: fixed to break through overflow: hidden of .titlebar-container
-    position: fixed
-    left: 50%
-    max-height: 80vh
-
-    // Fine-tuned to align the button...
-    transform: translate(-50%, -0.5rem)
-    overflow-y: auto
-
-.main-loading
-  margin: $line-height 0
-
-// The anchor for scrolling & spy
-.scroll-anchor-container
-  position: relative // containing block of scroll-anchor
-
-.scroll-anchor
-  +stretch
-  top: -4 * $line-height + rem-calc(1px) // Height of the fixed header, minus 1px space
-  bottom: 4 * $line-height
-  z-index: -1 // Do not block input
-
-  @media screen and (min-width: $screen-sm-min)
-    top: -5 * $line-height + rem-calc(1px) // Height of the fixed header, minus 1px space
-    bottom: 5 * $line-height
-
-.row-position-title
-  cursor: pointer
-  background: $gray
-  z-index: $zindex-navbar-fixed - 1 // It should not cover topic dropdown
-  opacity: .95
-  position: fixed
-  left: 0
-  right: 0
-  top: 2 * $line-height
-
-  @media screen and (min-width: $screen-sm-min)
-    top: 3 * $line-height
-
-  h4
-    margin: 0
-    color: $gray-darker
-  .l-row
-    border: 0
-    padding: 0.5 * $line-height
-
-  .menuicon
-    position: absolute
-    color: $gray-darker
-    right: 4px
-    top: 50%
-    transform: translateY(-50%)
-
-  // &:after
-  //   content: '⁝'
-  //   position: absolute
-  //   color: $gray-darker
-  //   font-size: 32px
-  //   right: 4px
-  //   top: 50%
-  //   transform: translateY(-50%)
-
-// Table row layout
-//
-.l-row
-  padding: $line-height 0 rem-calc($line-height-px - 1px)
-  border-bottom: rem-calc(1px) dashed $brand-success
-
-  ul
-    padding-left: 0
-    margin-bottom: 0
-
-  li
-    list-style-position: inside
-    position: relative // For the pseudo element
-    margin-bottom: $line-height * .5
-    z-index: 0
-    overflow: hidden
-    +transition(z-index 0.2s)
-    +transition-delay(0)
-
-    &:before
-      content: ''
-      position: absolute
-      left: 0
-      right: 0
-      height: $line-height * 1
-      +background-image(linear-gradient(rgba(#fff, 0), rgba(#fff, .65) 33%, rgba(#fff, 1)));
-
-    &:hover
-      overflow: visible
-
-    &:hover:before
-      display: none
-
-  li.has-ref
-    $delay: 0.5s
-
-    .label
-      margin-right: 0.25em // Add space
-
-    .content
-      display: inline
-
-      span
-        text-decoration: none
-        color: inherit
-
-      &:after
-        content: ''
-
-    .ref
-      font-style: italic
-      position: absolute
-      +stretch(100%, 0, -$line-height, 0)
-      height: $line-height
-      opacity: 0
-      +transition(opacity 0.2s ease-in-out)
-      +transition-delay(0)
-      color: $gray-dark
-
-      // Insert the two word into the compiled content
-      +ellipsis
-
-      &:before
-        content: '出處：'
-
-
-    // The white card with box shadow when hover
-    &:after
-      +stretch(-0.5rem, -0.5rem, -$line-height - 0.5rem, -0.5rem)
-      content: ''
-      background: $body-bg
-      z-index: -1
-      opacity: 0
-      +transition(all 0.2s ease-in-out)
-      +transition-delay(0)
-      border-radius: $border-radius-base
-
-    &:hover
-      +transition-delay($delay) // Delay the z-index transition
-      z-index: 1 // Higher than others
-      // list-style-type: none // Looks weird...
-      .ref
-        opacity: 1
-        +transition-delay($delay)
-
-      &:after
-        opacity: 1
-        +box-shadow(0 2px 6px 2px rgba(#000, .2))
-        +transition-delay($delay)
-
-  // Emphasized no-ref styles
-  li.has-no-ref
-    .content
-      span
-        text-decoration: line-through
-        color: rgba($brand-warning, .5)
-      &:after
-        font-size: 80%
-        text-decoration: none
-        content: '（無出處）'
-
-
-  .add-more
-    position: relative
-    z-index: 0 // As high as the <li>s
-
-    // Fine-tune the margins. Magic numbers.
-    margin: $line-height 1rem
-
-    .glyphicon
-      margin-right: 1rem
-
-  .column-empty
-    text-align: center
-    color: $gray-dark
-    font-size: $font-size-h3
-    line-height: 1.5
-
-.l-table
-  [ng-click]
-    cursor: pointer
-
-  h2
-    font-size: $font-size-h3
-    margin: 0
-
-  h3
-    margin: 0
-    .arrow
-      font-size: 0.75em
-      margin-left: 0.5em
-      opacity: 0.56
-
-    &:hover
-      .arrow
-        color: lighten(#680148, 18%)
-
-  .col-perspective-title // Title of perspective
-    font-family: $font-family-serif
-    color: $brand-success
-    letter-spacing: 0.2rem
-
-  .empty-summary
-    color: $gray-dark
-    font-size: $font-size-large
-    line-height: $line-height-large
-
-  // Override alignment.
-  .column-empty
-    text-align: left
-
-#edit
-  margin-top: $line-height
-  margin-bottom: $line-height
-
-// Highlight styles
-//
-[comment]
-  cursor: pointer
-  border-bottom: 1px dashed $gray-light
-
-[comment].is-info
-  cursor: help
-  border-bottom-color: $brand-primary
-
-[comment].is-controversial
-  $line-color: desaturate(lighten($brand-success, 60%), 20%)
-  border-bottom: none
-  background: $line-color url('../images/line.png') repeat-x bottom center
-
-
-// Content styles parsed by StyleData
-.italic
-  font-style: italic
-
-.underline
-  text-decoration: underline
-
-.bold
-  font-weight: bold
-
-#welcome
-  min-height: 100vh
+/* END iOS Safari specific workaround */
+.demo-drawer .mdl-menu .mdl-menu__item
   display: flex
-  +flex-flow(column)
+  align-items: center
 
-  > header
-    +flex(1)
-    display: flex
-    +flex-flow(column)
-    +justify-content(center)
+.demo-drawer-header
+  box-sizing: border-box
+  display: flex
+  flex-direction: column
+  justify-content: flex-end
+  padding: 16px
+  height: 151px
 
-    color: #fff
-    padding: 64px 0
-    background: $brand-primary
+.demo-avatar-dropdown
+  display: flex
+  position: relative
+  flex-direction: row
+  align-items: center
+  width: 100%
 
-    .welcome-header-button
-      color: #fff
-      background: transparent
-      border: 3px solid rgba(#fff, .82)
 
-      &:hover
-        border-color: transparent
-        background: rgba(#fff, .82)
-        color: $brand-primary
+.demo-navigation
+  flex-grow: 1
 
-  .welcome-history
-    padding: 64px 0
+.demo-layout .demo-navigation .mdl-navigation__link
+  display: flex !important
+  flex-direction: row
+  align-items: center
+  color: rgba(255, 255, 255, 0.56)
+  font-weight: 500
 
-    h2
-      padding-bottom: 32px
+.demo-layout .demo-navigation .mdl-navigation__link:hover
+  background-color: #00BCD4
+  color: #37474F
 
-    ul
-      padding-left: 0
-      list-style-type: none
+.demo-navigation .mdl-navigation__link .material-icons
+  font-size: 24px
+  color: rgba(255, 255, 255, 0.56)
+  margin-right: 32px
 
-    li
-      border-bottom: 1px solid $gray
-      padding: 0 8px 16px
-      display: inline-block
 
-      @media screen and (min-width: $screen-sm-min)
-        border-bottom: 0
+.demo-content
+  max-width: 1080px
 
-    .welcome-history-image
-      background: transparent center center no-repeat
-      width: 220px // Google doc gives width=220 or height=220 images
-      height: 220px
-      opacity: .5
-      +transition(opacity .4s)
 
-    a:hover
-      text-decoration: none
+.demo-charts
+  align-items: center
 
-      .welcome-history-image
-        opacity: 1
+.demo-chart:nth-child(1)
+  color: #ACEC00
 
-  > footer
-    background: $gray
-    padding: 64px 0
+.demo-chart:nth-child(2)
+  color: #00BBD6
+
+.demo-chart:nth-child(3)
+  color: #BA65C9
+
+.demo-chart:nth-child(4)
+  color: #EF3C79
+
+.demo-graphs
+  padding: 16px 32px
+  display: flex
+  flex-direction: column
+  align-items: stretch
+
+/* TODO: Find a proper solution to have the graphs
+ * not float around outside their container in IE10/11.
+ * Using a browserhacks.com solution for now.
+ */
+_:-ms-input-placeholder, :root .demo-graphs
+  min-height: 664px
+
+_:-ms-input-placeholder, :root .demo-graph
+  max-height: 300px
+
+/* TODO end */
+.demo-graph:nth-child(1)
+  color: #00b9d8
+
+.demo-graph:nth-child(2)
+  color: #d9006e
+
+
+.demo-cards
+  align-items: flex-start
+  align-content: flex-start
+
+.demo-cards .demo-separator
+  height: 32px
+
+.demo-cards .mdl-card__title.mdl-card__title
+  color: white
+  font-size: 24px
+  font-weight: 400
+
+.demo-cards ul
+  padding: 0
+
+.demo-cards h3
+  font-size: 1em
+
+.demo-updates .mdl-card__title
+  min-height: 200px
+  // background-image: url('images/dog.png')
+  background-position: 90% 100%
+  background-repeat: no-repeat
+
+.demo-cards .mdl-card__actions a
+  color: #00BCD4
+  text-decoration: none
+
+
+.demo-options h3
+  margin: 0
+
+.demo-options .mdl-checkbox__box-outline
+  border-color: rgba(255, 255, 255, 0.89)
+
+.demo-options ul
+  margin: 0
+  list-style-type: none
+
+.demo-options li
+  margin: 4px 0
+
+.demo-options .material-icons
+  color: rgba(255, 255, 255, 0.89)
+
+.demo-options .mdl-card__actions
+  height: 64px
+  display: flex
+  box-sizing: border-box
+  align-items: center

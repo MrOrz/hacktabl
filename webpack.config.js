@@ -1,9 +1,9 @@
 var DEVSERVER_PORT = 5000,
     path = require('path'),
     fs = require('fs'),
-    serveStatic = require('serve-static'),
     webpack = require('webpack'),
-    ExtractText = require('extract-text-webpack-plugin');
+    ExtractText = require('extract-text-webpack-plugin'),
+    packageJson = require('./package.json');
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -11,7 +11,7 @@ var isProduction = process.env.NODE_ENV === 'production';
 //
 var webpackCfg = {
   entry: {
-    'app': './src/livescript/app.ls',
+    'app': './src/js/app.js',
   },
   output: {
     // __dirname is the path of webpack.js
@@ -21,8 +21,10 @@ var webpackCfg = {
   module: {
     loaders: [
       {
-        test: /\.ls$/,
-        loader: 'livescript'
+        test: /\.js$/,
+        loader: 'babel',
+        query: packageJson.babel,
+        exclude: /node_modules/
       },
       {
         test: /\.s[a|c]ss$/,

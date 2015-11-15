@@ -1,18 +1,18 @@
 doctype html
-html(ng-app="app")
-  head(ng-controller="HeadCtrl as Head")
+html
+  head
     meta(charset="utf-8")
     link(rel="icon" type="image/png" href="/favicon.png" sizes="16x16")
     link(rel="icon" type="image/png" href="/favicon@2x.png" sizes="32x32")
     link(rel="icon" type="image/svg" href="/favicon.svg" sizes="any")
     meta(name="viewport" content="width=device-width, initial-scale=1")
-    link(rel="canonical" ng-href="http://hacktabl.org/{{Head.ethercalcId}}")
-    title(ng-bind="Head.title")
-    meta(ng-repeat="(property, content) in Head.meta" property="{{property}}" content="{{content}}")
+    title Hacktabl
     link(rel='stylesheet' href='/'+hash+'.css')
+    script(src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
 
   body
-    div(ng-view)
+    div#react-root
 
     script(src='/'+hash+'.js')
 
