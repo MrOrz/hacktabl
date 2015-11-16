@@ -1,5 +1,3 @@
-require('material-design-lite/material');
-
 import React from 'react';
 import styles from './app.sass';
 

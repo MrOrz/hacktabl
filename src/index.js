@@ -1,4 +1,5 @@
 // Global styles
+require('material-design-lite/src/material-design-lite.scss');
 require('./sass/index.sass');
 
 // Material JS

@@ -29,9 +29,12 @@ var webpackCfg = {
       {
         test: /\.s[a|c]ss$/,
         include: [
-          path.resolve(__dirname, './node_modules')
+          path.resolve(__dirname, './node_modules/material-design-lite/src')
         ],
-        loader: ExtractText.extract('style-loader', "css?importLoaders=1!sass?sourceMap&indentedSyntax")
+        loader: ExtractText.extract('style-loader',
+          "css?importLoaders=1!sass?sourceMap&includePaths[]=" +
+            path.resolve(__dirname, './node_modules/material-design-lite/src')
+        )
       },
       {
         test: /.s[a|c]ss$/,
@@ -51,7 +54,7 @@ var webpackCfg = {
     noParse: /vendor\/bower_components/
   },
   plugins: [
-    new ExtractText( isProduction ? "[hash].css" : "index.css", { allChunks: true }),
+    new ExtractText( isProduction ? "[hash].css" : "index.css", { allChunks: false }),
     new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
   ],
   debug: !isProduction,
