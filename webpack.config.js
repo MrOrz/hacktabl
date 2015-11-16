@@ -11,12 +11,12 @@ var isProduction = process.env.NODE_ENV === 'production';
 //
 var webpackCfg = {
   entry: {
-    'app': './src/js/app.js',
+    'index': './src/index.js',
   },
   output: {
     // __dirname is the path of webpack.js
     path: path.join(__dirname, 'build'),
-    filename: ( isProduction ? '[hash].js' : 'app.js')
+    filename: ( isProduction ? '[hash].js' : 'index.js')
   },
   module: {
     loaders: [
@@ -28,8 +28,18 @@ var webpackCfg = {
       },
       {
         test: /\.s[a|c]ss$/,
-        loader: ExtractText.extract(
-          "css!sass?sourceMap&indentedSyntax&includePaths[]=" +
+        include: [
+          path.resolve(__dirname, './node_modules')
+        ],
+        loader: ExtractText.extract('style-loader', "css?importLoaders=1!sass?sourceMap&indentedSyntax")
+      },
+      {
+        test: /.s[a|c]ss$/,
+        include: [
+          path.resolve(__dirname, './src')
+        ],
+        loader: ExtractText.extract('style-loader',
+          "css?modules&importLoaders=1!sass?sourceMap&indentedSyntax&includePaths[]=" +
             path.resolve(__dirname, "./node_modules/compass-mixins/lib")
         )
       },
@@ -41,7 +51,7 @@ var webpackCfg = {
     noParse: /vendor\/bower_components/
   },
   plugins: [
-    new ExtractText( isProduction ? "[hash].css" : "app.css" ),
+    new ExtractText( isProduction ? "[hash].css" : "index.css", { allChunks: true }),
     new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
   ],
   debug: !isProduction,
@@ -74,10 +84,10 @@ if( isProduction ){
   // http://webpack.github.io/docs/webpack-dev-server.html#combining-with-an-existing-server
   // http://gaearon.github.io/react-hot-loader/#enabling-hot-module-replacement
   //
-  webpackCfg.entry.app = [
+  webpackCfg.entry.index = [
     'webpack-dev-server/client?localhost:' + DEVSERVER_PORT,
     'webpack/hot/dev-server',
-    webpackCfg.entry.app
+    webpackCfg.entry.index
   ];
 
   webpackCfg.devServer = {

@@ -35,6 +35,7 @@
     "react": "^0.14.2",
     "sass-loader": "^1.0.3",
     "serve-static": "^1.10.0",
+    "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
     "webpack": "^1.10.5",
     "webpack-dev-server": "^1.10.1"
@@ -46,7 +47,7 @@
     "start": "parallelshell 'webpack-dev-server --progress' 'npm run build:index:dev'",
     "build": "npm run build:webpack && npm run build:index:prod",
     "build:index": "jade $npm_package_config_jade_in --out $npm_package_config_jade_out",
-    "build:index:dev": "npm run build:index -- --obj '{\"hash\":\"build/app\"}' --pretty --watch",
+    "build:index:dev": "npm run build:index -- --obj '{\"hash\":\"build/index\"}' --pretty --watch",
     "build:index:prod": "npm run build:index -- --obj $npm_package_config_webpack_stat",
     "build:webpack": "webpack --progress --json > $npm_package_config_webpack_stat",
     "deploy": "make deploy"
@@ -66,5 +67,8 @@
     "url": "https://github.com/MrOrz/hacktabl.git"
   },
   "author": "MrOrz",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "react-dom": "^0.14.2"
+  }
 }
