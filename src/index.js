@@ -1,10 +1,10 @@
 // Global styles
-require('material-design-lite/src/material-design-lite.scss');
-require('./sass/index.sass');
+import 'material-design-lite/src/material-design-lite.scss';
+import './sass/index.sass';
 
 // Material JS
-require('material-design-lite/material');
-
+import 'material-design-lite/material';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app';
 
