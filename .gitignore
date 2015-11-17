@@ -7,3 +7,5 @@ public/*
 !public/fonts
 !public/image
 webpack-stats.json
+
+npm-debug.log

@@ -13,7 +13,7 @@ class Header extends React.Component {
             <i className="material-icons">more_vert</i>
           </button>
         </div>
-        <div className="mdl-layout__header-row">
+        <div className={`mdl-layout__header-row ${styles.positionTitle}`}>
           Some tabs!!
         </div>
       </header>
@@ -39,6 +39,28 @@ class Drawer extends React.Component {
   }
 }
 
+class Footer extends React.Component {
+  render () {
+    return (
+      <footer className={`mdl-mini-footer ${styles.footer}`}>
+        <div className="mdl-mini-footer__left-section">
+          <div className="mdl-logo">Hacktabl</div>
+          <ul className="mdl-mini-footer__link-list">
+            <li><a href="">About this table</a></li>
+            <li><a href="">Edit the table</a></li>
+          </ul>
+        </div>
+        <div className={`mdl-mini-footer__right-section ${styles.footerRight}`}>
+          Hacktabl. g0v Project.
+        </div>
+      </footer>
+    );
+  }
+  componentDidUpdate() {
+    componentHandler.upgradeElement(React.findDOMNode(this));
+  }
+}
+
 export default class App extends React.Component {
   render() {
     return (
@@ -47,18 +69,7 @@ export default class App extends React.Component {
         <Drawer />
         <main className="mdl-layout__content">
         </main>
-        <footer className="mdl-mini-footer">
-          <div className="mdl-mini-footer__left-section">
-            <div className="mdl-logo">Hacktabl</div>
-            <ul className="mdl-mini-footer__link-list">
-              <li><a href="">About this table</a></li>
-              <li><a href="">Edit the table</a></li>
-            </ul>
-          </div>
-          <div className={`mdl-mini-footer__right-section ${styles.footerRight}`}>
-            Hacktabl. g0v Project.
-          </div>
-        </footer>
+        <Footer />
       </div>
     );
   }
