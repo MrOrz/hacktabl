@@ -1,5 +1,0 @@
-{
-  "c9":   {"underline": true,  "italic": false, "bold": false},
-  "c100": {"underline": false, "italic": false, "bold": true},
-  "c200": {"underline": false, "italic": true,  "bold": false}
-}
