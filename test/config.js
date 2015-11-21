@@ -1,4 +1,6 @@
-require('babel/register')(require('../package.json').config.babel);
+var babelCfg = Object.assign({}, require('../package.json').config.babel, {plugins: ["rewire"]});
+
+require('babel/register')(babelCfg);
 
 // Chai setup
 //
