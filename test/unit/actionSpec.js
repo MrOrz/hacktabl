@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import rewire from 'rewire';
 import { mockStore } from '../utils';
 import * as actions from '../../src/actions';
 
