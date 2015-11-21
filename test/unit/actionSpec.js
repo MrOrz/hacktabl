@@ -19,9 +19,9 @@ describe('fetchAndParseTable', () => {
     const TABLE_DATA = {foo: 'bar'};
 
     const EXPECTED_ACTIONS = [
-      {type: actions.FETCHING_TABLE, payload: TABLE_ID},
+      {type: actions.FETCHING_TABLE, payload: {id: TABLE_ID, data: true}},
       {type: actions.SET_TABLE, payload: {id: TABLE_ID, data: TABLE_DATA}},
-      {type: actions.FETCHING_TABLE, payload: false},
+      {type: actions.FETCHING_TABLE, payload: {id: TABLE_ID, data: false}},
     ];
 
     const SUCCESS_PARSER = tableId => Promise.resolve(TABLE_DATA);
@@ -36,9 +36,9 @@ describe('fetchAndParseTable', () => {
 
     // expect() is inside mockStore.
     const EXPECTED_ACTIONS = [
-      {type: actions.FETCHING_TABLE, payload: TABLE_ID},
+      {type: actions.FETCHING_TABLE, payload: {id: TABLE_ID, data: true}},
       {type: actions.FETCHING_ERROR, error: true, payload: {id: TABLE_ID, error:ERROR_DATA}},
-      {type: actions.FETCHING_TABLE, payload: false},
+      {type: actions.FETCHING_TABLE, payload: {id: TABLE_ID, data: false}},
     ];
 
     const FAILING_PARSER = tableId => Promise.reject(ERROR_DATA);

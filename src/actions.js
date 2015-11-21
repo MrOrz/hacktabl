@@ -16,10 +16,13 @@ function setTable(tableId, tableData) {
   }
 }
 
-function setFetchState(val) {
+function setFetchState(tableId, val) {
   return {
     type: FETCHING_TABLE,
-    payload: val
+    payload: {
+      id: tableId,
+      data: val
+    }
   };
 }
 
@@ -29,14 +32,14 @@ function currentlyFetchingTableId(state){
 
 export function fetchAndParseTable(tableId) {
   return dispatch => {
-    dispatch(setFetchState(tableId));
+    dispatch(setFetchState(tableId, true));
 
     return parser(tableId).then(data => {
       // Update cache
       cache.setTable(tableId, data);
 
       dispatch(setTable(tableId, data));
-      dispatch(setFetchState(false));
+      dispatch(setFetchState(tableId, false));
     }).catch(error => {
       dispatch({
         type: FETCHING_ERROR,
@@ -46,7 +49,7 @@ export function fetchAndParseTable(tableId) {
           error
         }
       });
-      dispatch(setFetchState(false));
+      dispatch(setFetchState(tableId, false));
     });
   };
 }
