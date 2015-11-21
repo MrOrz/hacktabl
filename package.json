@@ -13,6 +13,7 @@
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
     "compass-mixins": "^0.12.7",
+    "coveralls": "^2.11.4",
     "css-loader": "^0.15.6",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
