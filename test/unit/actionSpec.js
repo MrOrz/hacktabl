@@ -53,7 +53,7 @@ describe('fetchAndParseTable', () => {
 
 describe('loadCache', () => {
   it('should dispatch "SET_TABLE" with the data returned by cache', () => {
-    actions.__Rewire__('cache', {getTable: tableId => 'foo'});
+    actions.__Rewire__('cache', {getTable: tableId => ({data: 'foo', timestamp: 0})});
     expect(actions.loadCache('foo')).to.have.property('type', actions.SET_TABLE);
   });
 });

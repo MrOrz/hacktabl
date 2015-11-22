@@ -34,7 +34,14 @@ export function mockStore(getState, expectedActions, done) {
         const expectedAction = expectedActions.shift()
 
         try {
-          expect(action).to.eql(expectedAction)
+          // Remove timestamp in the payload
+          //
+          if(action.payload && action.payload.timestamp){
+            delete action.payload.timestamp;
+          }
+
+          expect(action).to.eql(expectedAction);
+
           if (done && !expectedActions.length) {
             done()
             hasDoneBefore = true;

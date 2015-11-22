@@ -6,11 +6,12 @@ export const FETCHING_TABLE = 'FETCHING_TABLE';
 export const SET_TABLE = 'SET_TABLE';
 export const FETCHING_ERROR = 'FETCHING_ERROR';
 
-const setTable = (tableId, tableData) => ({
+const setTable = (tableId, tableData, timestamp) => ({
   type: SET_TABLE,
   payload: {
     id: tableId,
-    data: tableData
+    data: tableData,
+    timestamp
   }
 });
 
@@ -18,7 +19,8 @@ const setFetchState = (tableId, val) => ({
   type: FETCHING_TABLE,
   payload: {
     id: tableId,
-    data: val
+    data: val,
+    timestamp: Date.now()
   }
 });
 
@@ -27,7 +29,8 @@ const setFetchError = (tableId, error) => ({
   error: true,
   payload:{
     id: tableId,
-    error
+    error,
+    timestamp: Date.now()
   }
 });
 
@@ -40,10 +43,12 @@ export function fetchAndParseTable(tableId) {
     dispatch(setFetchState(tableId, true));
 
     return parser(tableId).then(data => {
-      // Update cache
-      cache.setTable(tableId, data);
+      let timestamp = Date.now()
 
-      dispatch(setTable(tableId, data));
+      // Update cache
+      cache.setTable(tableId, {data, timestamp});
+
+      dispatch(setTable(tableId, data, timestamp));
       dispatch(setFetchState(tableId, false));
     }).catch(error => {
       dispatch(setFetchError(tableId, error));
@@ -53,9 +58,9 @@ export function fetchAndParseTable(tableId) {
 }
 
 export function loadCache(tableId) {
-  let tableData = cache.getTable(tableId);
+  let {data, timestamp} = cache.getTable(tableId);
 
-  if(tableData){
-    return setTable(tableId, tableData);
+  if(data){
+    return setTable(tableId, data, timestamp);
   }
 }
