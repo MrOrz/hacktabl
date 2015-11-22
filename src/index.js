@@ -20,7 +20,7 @@ ReactDOM.render((
   <Router history={createBrowserHistory()}>
     <Route path="/" component={App}>
       <IndexRoute component={HomePage} />
-      <Route path=":tableId">
+      <Route path=":tableId" onEnter={console.log.bind(console)}>
         <IndexRoute component={TablePage} />
         <Route path=":rowId" component={RowPage} />
         <Route path="item/:itemId" component={ItemPage} />
