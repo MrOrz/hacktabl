@@ -6,25 +6,30 @@ export const FETCHING_TABLE = 'FETCHING_TABLE';
 export const SET_TABLE = 'SET_TABLE';
 export const FETCHING_ERROR = 'FETCHING_ERROR';
 
-function setTable(tableId, tableData) {
-  return {
-    type: SET_TABLE,
-    payload: {
-      id: tableId,
-      data: tableData
-    }
+const setTable = (tableId, tableData) => ({
+  type: SET_TABLE,
+  payload: {
+    id: tableId,
+    data: tableData
   }
-}
+});
 
-function setFetchState(tableId, val) {
-  return {
-    type: FETCHING_TABLE,
-    payload: {
-      id: tableId,
-      data: val
-    }
-  };
-}
+const setFetchState = (tableId, val) => ({
+  type: FETCHING_TABLE,
+  payload: {
+    id: tableId,
+    data: val
+  }
+});
+
+const setFetchError = (tableId, error) => ({
+  type: FETCHING_ERROR,
+  error: true,
+  payload:{
+    id: tableId,
+    error
+  }
+});
 
 function currentlyFetchingTableId(state){
   return state.fetchingTable;
@@ -41,14 +46,7 @@ export function fetchAndParseTable(tableId) {
       dispatch(setTable(tableId, data));
       dispatch(setFetchState(tableId, false));
     }).catch(error => {
-      dispatch({
-        type: FETCHING_ERROR,
-        error: true,
-        payload:{
-          id: tableId,
-          error
-        }
-      });
+      dispatch(setFetchError(tableId, error));
       dispatch(setFetchState(tableId, false));
     });
   };
