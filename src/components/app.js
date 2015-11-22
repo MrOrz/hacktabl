@@ -68,6 +68,7 @@ export default class App extends React.Component {
         <Header />
         <Drawer />
         <main className="mdl-layout__content">
+          {this.props.children}
         </main>
         <Footer />
       </div>
