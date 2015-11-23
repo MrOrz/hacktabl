@@ -13,13 +13,11 @@ function table(state = {
       return assign({}, state, {isFetching: action.payload.data});
     case FETCHING_ERROR:
       return assign({}, state, {
-        isFetching: false,
         lastError: action.payload.data
       });
 
     case SET_TABLE:
       return assign({}, state, {
-        isFetching: false,
         lastFetchedAt: action.payload.timestamp,
         lastError: null,
         data: action.payload.data

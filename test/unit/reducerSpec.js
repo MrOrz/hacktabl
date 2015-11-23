@@ -41,7 +41,6 @@ describe('tables reducer', () => {
       }
     })).to.eql(assign({}, INITIAL_STATE, {
       table2: assign({}, INITIAL_STATE.table2, {
-        isFetching: false,
         lastFetchedAt: 200,
         data: 'new-bar',
         lastError: null
@@ -59,7 +58,6 @@ describe('tables reducer', () => {
       }
     })).to.eql(assign({}, INITIAL_STATE, {
       table2: assign({}, INITIAL_STATE.table2, {
-        isFetching: false,
         lastError: 'new-error'
       })
     }));
