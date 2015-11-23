@@ -27,12 +27,12 @@ function table(state = {
 }
 
 export function tables(state={}, action) {
-  let tableId = action.payload.id;
 
   switch(action.type){
     case FETCHING_TABLE:
     case FETCHING_ERROR:
     case SET_TABLE:
+      let tableId = action.payload.id;
       return assign({}, state, {
         [tableId]: table(state[tableId], action)
       });
