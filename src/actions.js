@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
-import parser from 'hacktabl-parser';
 import * as cache from './utils/cache';
+var parser = require('hacktabl-parser');
 
 export const FETCHING_TABLE = 'FETCHING_TABLE';
 export const SET_TABLE = 'SET_TABLE';

@@ -49,6 +49,10 @@ var webpackCfg = {
       {
         test: /\.(?:jpg|png|gif|eot|svg|ttf|woff|woff2|otf)$/,
         loader: "url-loader?limit=10000"
+      },
+      {
+        test: /hacktabl-parser/,
+        loader: 'exports?hacktablParser.default'
       }
     ],
     noParse: /vendor\/bower_components/
