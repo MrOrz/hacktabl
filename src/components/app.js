@@ -67,10 +67,10 @@ export default class App extends React.Component {
       <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
         <Header />
         <Drawer />
-        <main className="mdl-layout__content">
+        <main className={`mdl-layout__content ${styles.body}`}>
           {this.props.children}
+          <Footer />
         </main>
-        <Footer />
       </div>
     );
   }

@@ -1,13 +1,15 @@
 @import '../../node_modules/material-design-lite/src/_variables.scss';
+@import 'compass/_css3.scss';
 
 .positionTitle
   padding-left: 16px
 
-.footer
-  margin-left: $layout-drawer-width
+.body
+  +display-flex
+  +flex-direction(column)
 
-  @media screen and (max-width: $layout-screen-size-threshold)
-    margin-left: 0
+.footer
+  margin-top: auto
 
 .footerRight
   line-height: $footer-btn-size
