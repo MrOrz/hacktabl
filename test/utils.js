@@ -44,7 +44,7 @@ export function mockStore(getState, expectedActions, done) {
 
           if (done && !expectedActions.length) {
             done()
-            hasDoneBefore = true;
+            // hasDoneBefore = true;
           }
           return action
         } catch (e) {
