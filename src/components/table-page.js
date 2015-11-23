@@ -1,15 +1,24 @@
 import React from 'react';
 import {Link} from 'react-router';
-import styles from './table-page.sass';
+import {connect} from 'react-redux';
 
-export default class TablePage extends React.Component {
+import styles from './table-page.sass';
+import {loadTable} from '../actions';
+
+class TablePage extends React.Component {
+  componentDidMount() {
+    this.props.dispatch(loadTable(this.props.params.tableId));
+  }
+
   render() {
+    const tableData = JSON.stringify(this.props.tables, null, '  ')
     return (
       <div>
         <h1>Table {this.props.params.tableId}</h1>
-        <Link to="/president2017">president2017</Link>
-        <Link to="/president2016">president2016</Link>
+        <pre>{tableData}</pre>
       </div>
     )
   }
 };
+
+export default connect(state => state)(TablePage);

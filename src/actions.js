@@ -58,9 +58,29 @@ export function fetchAndParseTable(tableId) {
 }
 
 export function loadCache(tableId) {
-  let {data, timestamp} = cache.getTable(tableId);
+  let cached = cache.getTable(tableId);
 
-  if(data){
+  if(cached){
+    let {data, timestamp} = cached;
     return setTable(tableId, data, timestamp);
+  }else{
+    return setTable(tableId, {}, 0);
+  }
+}
+
+export function loadTable(tableId) {
+  return (dispatch, getState) => {
+    let state = getState();
+    let tableState = state.tables && state.tables[tableId];
+
+    // If no state at all, first load from cache
+    if(!tableState){
+      dispatch(loadCache(tableId));
+    }
+
+    // If not fetching this table, fetch the table
+    if(!(tableState && tableState.isFetching)) {
+      dispatch(fetchAndParseTable(tableId));
+    }
   }
 }
