@@ -1,4 +1,5 @@
 import React from 'react';
+import {findDOMNode} from 'react-dom';
 import styles from './app.sass';
 
 class Header extends React.Component {
@@ -21,7 +22,7 @@ class Header extends React.Component {
   }
 
   componentDidUpdate() {
-    componentHandler.upgradeElement(React.findDOMNode(this));
+    componentHandler.upgradeElement(findDOMNode(this));
   }
 }
 
@@ -35,7 +36,7 @@ class Drawer extends React.Component {
     );
   }
   componentDidUpdate() {
-    componentHandler.upgradeElement(React.findDOMNode(this));
+    componentHandler.upgradeElement(findDOMNode(this));
   }
 }
 
@@ -57,26 +58,33 @@ class Footer extends React.Component {
     );
   }
   componentDidUpdate() {
-    componentHandler.upgradeElement(React.findDOMNode(this));
+    componentHandler.upgradeElement(findDOMNode(this));
   }
 }
 
 export default class App extends React.Component {
   render() {
+    // Wrapping mdl-layout with another div to avoid nasty errors
+    // caused by material-design-lite, since it changes the DOM of mdl-layout.
+    //
+    // Ref: http://stackoverflow.com/questions/31998227/using-material-design-lite-with-react
+    //
     return (
-      <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
-        <Header />
-        <Drawer />
-        <main className={`mdl-layout__content ${styles.body}`}>
-          {this.props.children}
-          <Footer />
-        </main>
+      <div>
+        <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
+          <Header />
+          <Drawer />
+          <main className={`mdl-layout__content ${styles.body}`}>
+            {this.props.children}
+            <Footer />
+          </main>
+        </div>
       </div>
     );
   }
 
   componentDidUpdate() {
-    componentHandler.upgradeElement(React.findDOMNode(this));
+    componentHandler.upgradeElement(findDOMNode(this));
   }
 }
 
