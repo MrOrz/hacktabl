@@ -7,32 +7,23 @@ import 'material-design-lite/material';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, IndexRoute} from 'react-router';
+import {Router} from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import {Provider} from 'react-redux';
 
 import * as actions from './actions';
 import configureStore from './configure-store';
+import route from './route';
 
-import App from './components/app';
-import HomePage from './components/home-page';
-import TablePage from './components/table-page';
-import RowPage from './components/row-page';
-import ItemPage from './components/item-page';
+// From server-side rendering of script/archive.js
+var dehydratedState = window.__dehydrated;
 
-const store = configureStore();
+const store = configureStore(dehydratedState);
 
 ReactDOM.render((
   <Provider store={store}>
     <Router history={createBrowserHistory()}>
-      <Route path="/" component={App}>
-        <IndexRoute component={HomePage} />
-        <Route path=":tableId">
-          <IndexRoute component={TablePage} />
-          <Route path=":rowId" component={RowPage} />
-          <Route path="item/:itemId" component={ItemPage} />
-        </Route>
-      </Route>
+      {route}
     </Router>
   </Provider>
 ), document.getElementById('react-root'));
