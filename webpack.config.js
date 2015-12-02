@@ -93,7 +93,7 @@ if( isProduction ){
   //
   webpackCfg.entry.index = [
     'webpack-dev-server/client?localhost:' + DEVSERVER_PORT,
-    'webpack/hot/dev-server',
+    'webpack/hot/only-dev-server',
     webpackCfg.entry.index
   ];
 
