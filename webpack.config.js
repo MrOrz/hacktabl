@@ -7,6 +7,11 @@ var DEVSERVER_PORT = 5000,
 
 var isProduction = process.env.NODE_ENV === 'production';
 
+// node-sass bug: This is needed for lots of @imports on a same scss file.
+// Ref: https://github.com/sass/node-sass/issues/857
+//
+process.env.UV_THREADPOOL_SIZE = 64;
+
 // Base config
 //
 var webpackCfg = {
