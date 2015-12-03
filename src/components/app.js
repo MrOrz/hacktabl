@@ -16,7 +16,7 @@ export default class App extends React.Component {
     //
     return (
       <div>
-        <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
+        <div ref="layout" className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
           <Header />
           <Drawer />
           <main className={`mdl-layout__content ${styles.main}`}>
@@ -29,10 +29,10 @@ export default class App extends React.Component {
   }
 
   componentDidUpdate() {
-    upgradeToMdl(this);
+    upgradeToMdl(this.refs.layout);
   }
   componentDidMount() {
-    upgradeToMdl(this);
+    upgradeToMdl(this.refs.layout);
   }
 }
 
