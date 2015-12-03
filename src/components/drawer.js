@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
 import styles from './drawer.sass';
 import PureComponent from 'react-pure-render/component';
 import {connect} from 'react-redux';
 
-const PARAGRAPH_TYPE = React.PropTypes.shape({
-  children: React.PropTypes.arrayOf(React.PropTypes.shape({
-    text: React.PropTypes.string
+const PARAGRAPH_TYPE = PropTypes.shape({
+  children: PropTypes.arrayOf(PropTypes.shape({
+    text: PropTypes.string
   })).isRequired
 });
 
@@ -16,32 +16,46 @@ function concatAllParagraphText(paragraphs) {
         , '');
 }
 
-class RowTitleItem extends PureComponent {
+class RowTitleItem extends React.Component {
   render () {
     let text = concatAllParagraphText(this.props.paragraphs);
+    let classNames = ['mdl-js-button mdl-js-ripple-effect', styles.item];
+
+    if(this.props.isTop){
+      classNames.push(styles.isTop);
+    }
+
     return (
-      <li>{text}</li>
+      <li className={classNames.join(' ')}>
+        {text}
+      </li>
     );
+  }
+
+  componentDidUpdate() {
+    console.log('upgrade!', findDOMNode(this))
+    componentHandler.upgradeElement(findDOMNode(this));
   }
 }
 
 RowTitleItem.propTypes = {
-  paragraphs: React.PropTypes.arrayOf(PARAGRAPH_TYPE)
+  paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE),
+  isTop: PropTypes.bool
 };
 
-class RowTitleDelimiter extends PureComponent {
+class RowTitleDivider extends PureComponent {
   render () {
     let textSegments = this.props.headers.map(header => concatAllParagraphText(header.paragraphs));
 
     return (
-      <li>{textSegments.join('／')}</li>
+      <li className={styles.divider}>{textSegments.join('／')}</li>
     )
   }
 }
 
-RowTitleDelimiter.propTypes = {
-  headers: React.PropTypes.arrayOf(React.PropTypes.shape({
-    paragraphs: React.PropTypes.arrayOf(PARAGRAPH_TYPE)
+RowTitleDivider.propTypes = {
+  headers: PropTypes.arrayOf(PropTypes.shape({
+    paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE)
   }))
 };
 
@@ -53,7 +67,7 @@ export class RowTitleNav extends PureComponent {
     traverse(this.props.rows, [], 0);
 
     return (
-      <ul>
+      <ul className={styles.list}>
         {items}
       </ul>
     );
@@ -71,13 +85,13 @@ export class RowTitleNav extends PureComponent {
           //
           if(titleStack.length > 0 && lastTitleHeader !== titleStack[titleStack.length-1]){
             items.push(
-              <RowTitleDelimiter key={""+Math.random()} headers={titleStack.slice(0)} />
+              <RowTitleDivider key={""+Math.random()} headers={titleStack.slice(0)} />
             );
             lastTitleHeader = titleStack[titleStack.length-1];
           }
 
           items.push(
-            <RowTitleItem key={""+Math.random()} paragraphs={row.paragraphs}/>
+            <RowTitleItem key={""+Math.random()} paragraphs={row.paragraphs} isTop={titleStack.length === 0}/>
           )
         }
       })
@@ -86,11 +100,11 @@ export class RowTitleNav extends PureComponent {
 }
 
 RowTitleNav.propTypes = {
-  rows: React.PropTypes.arrayOf(React.PropTypes.shape({
-    paragraphs: React.PropTypes.array,
-    colspan: React.PropTypes.number.isRequired,
-    cells: React.PropTypes.array, // Most-detailed headers have this
-    children: React.PropTypes.array // Top-level & middle level headers have this
+  rows: PropTypes.arrayOf(PropTypes.shape({
+    paragraphs: PropTypes.array,
+    colspan: PropTypes.number.isRequired,
+    cells: PropTypes.array, // Most-detailed headers have this
+    children: PropTypes.array // Top-level & middle level headers have this
   }))
 };
 

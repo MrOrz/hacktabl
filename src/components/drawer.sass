@@ -3,6 +3,7 @@
 @import 'compass/typography/text/_ellipsis.scss'
 
 $drawer-padding: 16px
+$item-border: 1px solid rgba(#000, .12)
 
 .title.title // specificity...
   $line-height: 28px
@@ -10,3 +11,36 @@ $drawer-padding: 16px
   line-height: $line-height
   padding: ($title-height - $line-height)/2 $drawer-padding
 
+.list
+  list-style-type: none
+  padding-left: 0
+  border-bottom: $item-border
+
+.item
+  @ellipsis
+  padding: 0 $drawer-padding
+  font-size: 16px
+  line-height: 48px
+  cursor: pointer
+
+  // For ripple-effect
+  position: relative
+  overflow: hidden
+
+.item:hover
+  background: rgba(#000, .12)
+
+.item:active
+  background: rgba(#000, .06)
+
+.isTop
+  border-top: $item-border
+
+.divider
+  @ellipsis
+  border-top: $item-border
+  padding: 0 $drawer-padding
+  font-size: 14px
+  line-height: 32px
+  font-weight: bold
+  color: rgba(#000, .56)
