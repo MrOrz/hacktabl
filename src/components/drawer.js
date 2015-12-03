@@ -2,14 +2,9 @@ import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
 import styles from './drawer.sass';
 import PureComponent from 'react-pure-render/component';
-import {connect} from 'react-redux';
-import upgradeToMdl from './../utils/upgrade'
-
-const PARAGRAPH_TYPE = PropTypes.shape({
-  children: PropTypes.arrayOf(PropTypes.shape({
-    text: PropTypes.string
-  })).isRequired
-});
+import {connectToCurrentTable} from '../utils/connect';
+import upgradeToMdl from '../utils/upgrade'
+import {PARAGRAPH_TYPE} from '../utils/types'
 
 function concatAllParagraphText(paragraphs) {
   return paragraphs.reduce((sum, p) =>
@@ -155,4 +150,4 @@ class Drawer extends React.Component {
   }
 }
 
-export default connect(state => state.tables[state.currentTableId] || {})(Drawer);
+export default connectToCurrentTable(Drawer);
