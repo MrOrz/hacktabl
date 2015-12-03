@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {FETCHING_TABLE, SET_TABLE, FETCHING_ERROR} from './actions';
+import {FETCHING_TABLE, SET_TABLE, FETCHING_ERROR, NAVIGATE_TABLE} from './actions';
 import assign from 'object-assign';
 
 function table(state = {
@@ -42,8 +42,18 @@ export function tables(state={}, action) {
   }
 }
 
+export function currentTableId(state='', action) {
+  switch(action.type){
+    case NAVIGATE_TABLE:
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 var rootReducer = combineReducers({
-  tables
+  tables,
+  currentTableId
 });
 
 export default rootReducer;

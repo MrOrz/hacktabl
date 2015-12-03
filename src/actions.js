@@ -5,6 +5,7 @@ var parser = require('hacktabl-parser');
 export const FETCHING_TABLE = 'FETCHING_TABLE';
 export const SET_TABLE = 'SET_TABLE';
 export const FETCHING_ERROR = 'FETCHING_ERROR';
+export const NAVIGATE_TABLE = 'NAVIGATE_TABLE';
 
 const setTable = (tableId, tableData, timestamp) => ({
   type: SET_TABLE,
@@ -82,5 +83,12 @@ export function loadTable(tableId) {
     if(!(tableState && tableState.isFetching)) {
       dispatch(fetchAndParseTable(tableId));
     }
+  }
+}
+
+export function navigateToTable(tableId) {
+  return {
+    type: NAVIGATE_TABLE,
+    payload: tableId
   }
 }

@@ -3,11 +3,13 @@ import {Link} from 'react-router';
 import {connect} from 'react-redux';
 
 import styles from './table-page.sass';
-import {loadTable} from '../actions';
+import {loadTable, navigateToTable} from '../actions';
 
 class TablePage extends React.Component {
   componentDidMount() {
-    this.props.dispatch(loadTable(this.props.params.tableId));
+    let tableId = this.props.params.tableId;
+    this.props.dispatch(navigateToTable(tableId))
+    this.props.dispatch(loadTable(tableId));
   }
 
   render() {

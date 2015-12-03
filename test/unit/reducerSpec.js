@@ -1,6 +1,6 @@
 import {expect} from 'chai';
-import {FETCHING_TABLE, SET_TABLE, FETCHING_ERROR} from '../../src/actions';
-import {tables} from '../../src/reducers';
+import {FETCHING_TABLE, SET_TABLE, FETCHING_ERROR, NAVIGATE_TABLE} from '../../src/actions';
+import {tables, currentTableId} from '../../src/reducers';
 import assign from 'object-assign';
 
 describe('tables reducer', () => {
@@ -62,5 +62,12 @@ describe('tables reducer', () => {
       })
     }));
 
+  });
+});
+
+describe('currentTableId reducer', () => {
+  it('should set currentTableId', () => {
+    expect(currentTableId('', {type: NAVIGATE_TABLE, payload:'FOO'}))
+      .to.eql('FOO');
   });
 });
