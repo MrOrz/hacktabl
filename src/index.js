@@ -5,6 +5,10 @@ import './sass/index.sass';
 // Material JS
 import 'material-design-lite/material';
 
+// Override ComponentHandler automatic-upgrade to be
+//
+componentHandler.upgradeAllRegistered = function(){};
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router} from 'react-router';
