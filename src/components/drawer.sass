@@ -1,2 +1,12 @@
-@import '../../node_modules/material-design-lite/src/_variables.scss';
-@import 'compass/_css3.scss';
+@import '../../node_modules/material-design-lite/src/_variables.scss'
+@import 'compass/_css3.scss'
+@import 'compass/typography/text/_ellipsis.scss'
+
+$drawer-padding: 16px
+
+.title.title // specificity...
+  $line-height: 28px
+  $title-height: 56px
+  line-height: $line-height
+  padding: ($title-height - $line-height)/2 $drawer-padding
+
