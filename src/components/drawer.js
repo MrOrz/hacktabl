@@ -3,6 +3,7 @@ import {findDOMNode} from 'react-dom';
 import styles from './drawer.sass';
 import PureComponent from 'react-pure-render/component';
 import {connect} from 'react-redux';
+import upgradeToMdl from './../utils/upgrade'
 
 const PARAGRAPH_TYPE = PropTypes.shape({
   children: PropTypes.arrayOf(PropTypes.shape({
@@ -32,9 +33,12 @@ class RowTitleItem extends React.Component {
     );
   }
 
+  componentDidMount() {
+    upgradeToMdl(this);
+  }
+
   componentDidUpdate() {
-    console.log('upgrade!', findDOMNode(this))
-    componentHandler.upgradeElement(findDOMNode(this));
+    upgradeToMdl(this);
   }
 }
 
@@ -144,7 +148,10 @@ class Drawer extends React.Component {
 
   }
   componentDidUpdate() {
-    componentHandler.upgradeElement(findDOMNode(this));
+    upgradeToMdl(this);
+  }
+  componentDidMount() {
+    upgradeToMdl(this);
   }
 }
 

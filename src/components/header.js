@@ -1,6 +1,7 @@
 import React from 'react';
 import {findDOMNode} from 'react-dom';
 import styles from './header.sass';
+import upgradeToMdl from '../utils/upgrade'
 
 import {connect} from 'react-redux';
 
@@ -24,7 +25,10 @@ class Header extends React.Component {
   }
 
   componentDidUpdate() {
-    componentHandler.upgradeElement(findDOMNode(this));
+    upgradeToMdl(this);
+  }
+  componentDidMount() {
+    upgradeToMdl(this);
   }
 }
 

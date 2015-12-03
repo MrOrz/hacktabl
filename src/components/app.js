@@ -1,6 +1,7 @@
 import React from 'react';
 import {findDOMNode} from 'react-dom';
 import styles from './app.sass';
+import upgradeToMdl from '../utils/upgrade';
 
 import Header from './header';
 import Drawer from './drawer';
@@ -28,7 +29,10 @@ export default class App extends React.Component {
   }
 
   componentDidUpdate() {
-    componentHandler.upgradeElement(findDOMNode(this));
+    upgradeToMdl(this);
+  }
+  componentDidMount() {
+    upgradeToMdl(this);
   }
 }
 

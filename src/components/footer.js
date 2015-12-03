@@ -1,6 +1,7 @@
 import React from 'react';
 import {findDOMNode} from 'react-dom';
 import styles from './footer.sass';
+import upgradeToMdl from '../utils/upgrade';
 
 import {connect} from 'react-redux';
 
@@ -22,7 +23,10 @@ class Footer extends React.Component {
     );
   }
   componentDidUpdate() {
-    componentHandler.upgradeElement(findDOMNode(this));
+    upgradeToMdl(this);
+  }
+  componentDidMount() {
+    upgradeToMdl(this);
   }
 }
 
