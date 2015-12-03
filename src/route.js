@@ -6,7 +6,7 @@ import TablePage from './components/table-page';
 import RowPage from './components/row-page';
 import ItemPage from './components/item-page';
 
-const store = (
+const route = (
   <Route path="/" component={App}>
     <IndexRoute component={HomePage} />
     <Route path=":tableId">
@@ -17,4 +17,4 @@ const store = (
   </Route>
 );
 
-export default store;
+export default route;
