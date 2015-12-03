@@ -63,7 +63,7 @@ var webpackCfg = {
     noParse: /vendor\/bower_components/
   },
   plugins: [
-    new ExtractText( isProduction ? "[hash].css" : "index.css", { allChunks: false }),
+    new ExtractText( isProduction ? "[hash].css" : "index.css", { allChunks: false, disable: !isProduction } ),
     new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
   ],
   debug: !isProduction,
