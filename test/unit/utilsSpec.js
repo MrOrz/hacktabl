@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {spy} from 'sinon';
 import assign from 'object-assign';
-import {concatAllRuns, concatAllParagraphs, iterateColumnHeaders} from '../../src/utils/traverse';
+import {concatAllRuns, concatAllParagraphs, iterateColumnHeaders, iterateRows} from '../../src/utils/traverse';
 
 const FILE_UNDER_TEST = '../../src/utils/cache';
 
@@ -139,7 +139,93 @@ describe('traverse', () => {
 
   describe('iterateRows', () => {
     it('iterates over nested rows', () => {
+      // Simplified rows from doc:
+      // https://docs.google.com/document/d/1lA_QiIUzjgl3ImwZSU_gFFq7f22y5YqUB62-S0wkkQc/edit
+      //
 
+      let iterator = iterateRows([
+        {
+          "paragraphs": [
+            {
+              "level": -1,
+              "children": [{"text": "a"}]
+            }
+          ],
+          "colspan": 1,
+          "children": [
+            {
+              "paragraphs": [
+                {
+                  "level": -1,
+                  "children": [{"text": "a-1"}]
+                }
+              ],
+              "colspan": 1,
+              "cells": ['1st row']
+            },
+            {
+              "paragraphs": [
+                {
+                  "level": -1,
+                  "children": [{"text": "a-2"}]
+                }
+              ],
+              "colspan": 1,
+              "cells": ['2nd row']
+            }
+          ]
+        },
+        {
+          "paragraphs": [
+            {
+              "level": -1,
+              "children": [{"text": "b"}]
+            }
+          ],
+          "colspan": 2,
+          "cells": ['3rd row']
+        }
+      ]);
+
+      expect(iterator.next().value, "1st row").to.eql({
+        headers: [
+          [{
+            "level": -1,
+            "children": [{"text": "a"}]
+          }],
+          [{
+            "level": -1,
+            "children": [{"text": "a-1"}]
+          }]
+        ],
+        cells: ['1st row']
+      });
+
+      expect(iterator.next().value, "2nd row").to.eql({
+        headers: [
+          [{
+            "level": -1,
+            "children": [{"text": "a"}]
+          }],
+          [{
+            "level": -1,
+            "children": [{"text": "a-2"}]
+          }]
+        ],
+        cells: ['2nd row']
+      });
+
+      expect(iterator.next().value, "3rd row").to.eql({
+        headers: [
+          [{
+            "level": -1,
+            "children": [{"text": "b"}]
+          }]
+        ],
+        cells: ['3rd row']
+      });
+
+      expect(iterator.next().done).to.equal(true);
     });
   });
 

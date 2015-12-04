@@ -3,18 +3,12 @@ import {findDOMNode} from 'react-dom';
 import styles from './drawer.sass';
 import PureComponent from 'react-pure-render/component';
 import {connectToCurrentTable} from '../utils/connect';
+import {iterateRows, concatAllParagraphs} from '../utils/traverse';
 import upgradeToMdl from '../utils/upgrade'
 import {PARAGRAPH_TYPE} from '../utils/types'
 
-function concatAllParagraphText(paragraphs) {
-  return paragraphs.reduce((sum, p) =>
-          sum + p.children.reduce((s, child) => s + child.text, '')
-        , '');
-}
-
 class RowTitleItem extends React.Component {
   render () {
-    let text = concatAllParagraphText(this.props.paragraphs);
     let classNames = ['mdl-js-button mdl-js-ripple-effect', styles.item];
 
     if(this.props.isTop){
@@ -23,7 +17,7 @@ class RowTitleItem extends React.Component {
 
     return (
       <li className={classNames.join(' ')}>
-        {text}
+        {this.props.children}
       </li>
     );
   }
@@ -37,33 +31,41 @@ class RowTitleItem extends React.Component {
   }
 }
 
-RowTitleItem.propTypes = {
-  paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE),
-  isTop: PropTypes.bool
-};
-
 class RowTitleDivider extends PureComponent {
   render () {
-    let textSegments = this.props.headers.map(header => concatAllParagraphText(header.paragraphs));
-
     return (
-      <li className={styles.divider}>{textSegments.join('／')}</li>
+      <li className={styles.divider}>{this.props.children}</li>
     )
   }
 }
 
-RowTitleDivider.propTypes = {
-  headers: PropTypes.arrayOf(PropTypes.shape({
-    paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE)
-  }))
-};
 
 export class RowTitleNav extends PureComponent {
   render () {
     let items = [];
-    let lastTitleHeader = null;
+    let lastdividerText = null;
 
-    traverse(this.props.rows, [], 0);
+    // traverse(this.props.rows, [], 0);
+    for(let row of iterateRows(this.props.rows)){
+      if(row.headers.length > 1){
+        let dividerText = row.headers.slice(0, -1).map(
+          paragraphs => concatAllParagraphs(paragraphs)).join('／');
+
+        if(dividerText !== lastdividerText){
+          items.push(
+            <RowTitleDivider key={""+Math.random()}>{dividerText}</RowTitleDivider>
+          );
+          lastdividerText = dividerText
+        }
+      }
+      items.push(
+        <RowTitleItem key={""+Math.random()} isTop={row.headers.length === 1}>
+          {concatAllParagraphs(row.headers[row.headers.length-1])}
+        </RowTitleItem>
+      )
+
+    }
+
 
     return (
       <ul className={styles.list}>
