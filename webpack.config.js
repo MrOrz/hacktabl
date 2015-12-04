@@ -32,19 +32,20 @@ var webpackCfg = {
         exclude: /node_modules/
       },
       {
+        // CSS modules not enabled for these files
+        //
         test: /\.s[a|c]ss$/,
         include: [
-          path.resolve(__dirname, './node_modules/material-design-lite/src')
+          path.resolve(__dirname, './src/sass')
         ],
-        loader: ExtractText.extract('style-loader',
-          "css?importLoaders=1!sass?sourceMap&includePaths[]=" +
-            path.resolve(__dirname, './node_modules/material-design-lite/src')
-        )
+        loader: ExtractText.extract('style-loader', "css?importLoaders=1!sass?sourceMap&indentedSyntax")
       },
       {
+        // CSS modules enabled for these files
+        //
         test: /.s[a|c]ss$/,
         include: [
-          path.resolve(__dirname, './src')
+          path.resolve(__dirname, './src/components')
         ],
         loader: ExtractText.extract('style-loader',
           "css?modules&importLoaders=1!sass?sourceMap&indentedSyntax&includePaths[]=" +
@@ -56,6 +57,8 @@ var webpackCfg = {
         loader: "url-loader?limit=10000"
       },
       {
+        // Hacking @@
+        //
         test: /hacktabl-parser/,
         loader: 'exports?hacktablParser.default'
       }

@@ -1,5 +1,4 @@
 // Global styles
-import 'material-design-lite/src/material-design-lite.scss';
 import './sass/index.sass';
 
 // Material JS
