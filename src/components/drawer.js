@@ -43,24 +43,26 @@ class RowTitleDivider extends PureComponent {
 export class RowTitleNav extends PureComponent {
   render () {
     let items = [];
-    let lastdividerText = null;
+    let lastDividerText = null;
 
     // traverse(this.props.rows, [], 0);
     for(let row of iterateRows(this.props.rows)){
+      let content = concatAllParagraphs(row.headers[row.headers.length-1]);
+
       if(row.headers.length > 1){
         let dividerText = row.headers.slice(0, -1).map(
           paragraphs => concatAllParagraphs(paragraphs)).join('／');
 
-        if(dividerText !== lastdividerText){
+        if(dividerText !== lastDividerText){
           items.push(
-            <RowTitleDivider key={""+Math.random()}>{dividerText}</RowTitleDivider>
+            <RowTitleDivider key={dividerText}>{dividerText}</RowTitleDivider>
           );
-          lastdividerText = dividerText
+          lastDividerText = dividerText
         }
       }
       items.push(
-        <RowTitleItem key={""+Math.random()} isTop={row.headers.length === 1}>
-          {concatAllParagraphs(row.headers[row.headers.length-1])}
+        <RowTitleItem key={content} isTop={row.headers.length === 1}>
+          {content}
         </RowTitleItem>
       )
 
