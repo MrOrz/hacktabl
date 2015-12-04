@@ -3,27 +3,37 @@ import {findDOMNode} from 'react-dom';
 import styles from './header.sass';
 import upgradeToMdl from '../utils/upgrade';
 import PureComponent from 'react-pure-render/component';
-import {connectToCurrentTable} from '../utils/connect';
-import {PARAGRAPH_TYPE, TABLE_TYPE, CONFIG_TYPE} from '../utils/types'
+import {iterateColumnHeaders, concatAllParagraphs} from '../utils/traverse';
+import {TABLE_CELL_TYPE, TABLE_TYPE, CONFIG_TYPE} from '../utils/types'
 
-export class ColumnTitleNav extends PureComponent{
+class ColumnTitleNav extends PureComponent{
   render() {
-    let items = ['Yo'];
+    let items = [];
+    let lastAncestorText = null;
+
+    for(let column of iterateColumnHeaders(this.props.columns)) {
+      let ancestorText = column.slice(0, -1).map(
+        paragraphs => concatAllParagraphs(paragraphs)).join('／');
+      let content = concatAllParagraphs(column[column.length-1]);
+
+      if(ancestorText && ancestorText !== lastAncestorText) {
+        items.push(<li key={`${ancestorText}-${content}`}>{ancestorText}<br/>{content}</li>)
+        lastAncestorText = ancestorText;
+      } else {
+        items.push(<li key={content}>{content}</li>)
+      }
+    }
+
     return (
-      <nav>
-        <ul>
-          {items}
-        </ul>
-      </nav>
-    )
+      <ul className={styles.columnHeaderNav}>
+        {items}
+      </ul>
+    );
   }
 }
 
 ColumnTitleNav.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.shape({
-    paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE),
-    children: PropTypes.array
-  }))
+  columns: PropTypes.arrayOf(TABLE_CELL_TYPE)
 }
 
 export default class Header extends React.Component {
@@ -31,10 +41,10 @@ export default class Header extends React.Component {
     let title = 'Hacktabl';
     let columnElem = '';
 
-    if(this.props.data && this.props.data.table && this.props.data.config){
-      title = this.props.data.config.TITLE || 'Hacktabl';
+    if(this.props.table && this.props.config){
+      title = this.props.config.TITLE || 'Hacktabl';
       columnElem = (
-        <ColumnTitleNav columns={this.props.data.table.columns} />
+        <ColumnTitleNav columns={this.props.table.columns} />
       )
     }
 
@@ -48,8 +58,12 @@ export default class Header extends React.Component {
             <i className="material-icons">more_vert</i>
           </button>
         </div>
-        <div className={`mdl-layout__header-row ${styles.positionTitle}`}>
-          {columnElem}
+        <div className={`mdl-layout__header-row ${styles.positionRow}`}>
+          <div style={{
+            transform: `translate3d(-${this.props.scrollLeft}px, 0, 0)`
+          }}>
+            {columnElem}
+          </div>
         </div>
       </header>
     );
