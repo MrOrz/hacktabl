@@ -4,8 +4,8 @@ import styles from './drawer.sass';
 import PureComponent from 'react-pure-render/component';
 import {connectToCurrentTable} from '../utils/connect';
 import {iterateRows, concatAllParagraphs} from '../utils/traverse';
-import upgradeToMdl from '../utils/upgrade'
-import {PARAGRAPH_TYPE} from '../utils/types'
+import upgradeToMdl from '../utils/upgrade';
+import {TABLE_TYPE, TABLE_CELL_TYPE, CONFIG_TYPE} from '../utils/types';
 
 class RowTitleItem extends React.Component {
   render () {
@@ -101,21 +101,16 @@ export class RowTitleNav extends PureComponent {
 }
 
 RowTitleNav.propTypes = {
-  rows: PropTypes.arrayOf(PropTypes.shape({
-    paragraphs: PropTypes.array,
-    colspan: PropTypes.number.isRequired,
-    cells: PropTypes.array, // Most-detailed headers have this
-    children: PropTypes.array // Top-level & middle level headers have this
-  }))
+  rows: PropTypes.arrayOf(TABLE_CELL_TYPE)
 };
 
 RowTitleNav.defaultProps = {
   rows: []
 };
 
-class Drawer extends React.Component {
+export default class Drawer extends React.Component {
   render () {
-    if(!this.props.data){
+    if(!this.props.config){
       return (
         <div className="mdl-layout__drawer">
           Loading...
@@ -123,15 +118,15 @@ class Drawer extends React.Component {
       )
     }
     let titleElem = "";
-    if(this.props.data.config && this.props.data.config.TITLE){
-      titleElem = <span className={`mdl-layout__title ${styles.title}`}>{this.props.data.config.TITLE}</span>
+    if(this.props.config && this.props.config.TITLE){
+      titleElem = <span className={`mdl-layout__title ${styles.title}`}>{this.props.config.TITLE}</span>
     }
 
     let navElem = "";
-    if(this.props.data.table && this.props.data.table.rows){
+    if(this.props.table && this.props.table.rows){
       navElem = (
         <nav className={styles.menu}>
-          <RowTitleNav rows={this.props.data.table.rows} />
+          <RowTitleNav rows={this.props.table.rows} />
         </nav>
       );
     }
@@ -152,4 +147,7 @@ class Drawer extends React.Component {
   }
 }
 
-export default connectToCurrentTable(Drawer);
+Drawer.propTypes = {
+  table: TABLE_TYPE,
+  config: CONFIG_TYPE
+};
