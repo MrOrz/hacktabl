@@ -461,6 +461,7 @@ angular.module \app.service, <[ngSanitize ga ui.bootstrap.selected app.router ap
       return Promise.reject(ERRORS.NO_DOC_INFO)
 
     if data.LINE_LIMIT
+      document.body.classList.add('has-line-limit')
       style-elem = document.create-element \style
       style-elem.innerHTML = "
         .l-row li:not(:hover) {max-height: #{+data.LINE_LIMIT * STYLE.LINE_HEIGHT}px;}
@@ -469,6 +470,7 @@ angular.module \app.service, <[ngSanitize ga ui.bootstrap.selected app.router ap
       document.body.append-child style-elem
 
     if data.LINE_LIMIT_DESKTOP
+      document.body.classList.add('has-line-limit')
       style-elem = document.create-element \style
       style-elem.innerHTML = "
         @media screen and (min-width: 768px) {
