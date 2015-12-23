@@ -13,18 +13,19 @@
   padding-left: 0
   display: flex
   flex-flow: row
-  justify-content: center
 
 $itemLineHeight: 24px
 .columnHeaderNav li
   display: block
-  width: $mobile-column-width
-  max-width: $column-max-width
   font-size: 16px
   line-height: $itemLineHeight
+  flex: 1 0 $mobile-column-width
 
   @media screen and (min-width: $grid-tablet-breakpoint)
-    width: $tablet-column-width
+    flex-basis: $tablet-column-width
+
+  @media screen and (min-width: $grid-desktop-breakpoint)
+    flex-basis: $desktop-column-width
 
 
 .isDivider

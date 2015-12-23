@@ -8,13 +8,13 @@
 .cellContainer
   display: flex
   flex-flow: row
-  margin: 0 auto
 
 .cell
   display: block
-  width: $mobile-column-width
-  max-width: $column-max-width
-  flex: 0 0 auto
+  flex: 1 0 $mobile-column-width
 
   @media screen and (min-width: $grid-tablet-breakpoint)
-    width: $tablet-column-width
+    flex-basis: $tablet-column-width
+
+  @media screen and (min-width: $grid-desktop-breakpoint)
+    flex-basis: $desktop-column-width
