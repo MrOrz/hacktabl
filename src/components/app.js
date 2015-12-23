@@ -21,8 +21,8 @@ class App extends React.Component {
 
   render() {
 
-    let table = this.props.data && this.props.data.table;
-    let config = this.props.data && this.props.data.config;
+    let table = this.props.currentTable.data && this.props.currentTable.data.table;
+    let config = this.props.currentTable.data && this.props.currentTable.data.config;
     // Wrapping mdl-layout with another div to avoid nasty errors
     // caused by material-design-lite, since it changes the DOM of mdl-layout.
     //
