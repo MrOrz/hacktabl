@@ -1,9 +1,7 @@
 @import '../sass/_variables.sass'
 
 .row
-  padding: 0 $row-padding
-  display: flex
-  flex-flow: column
+  padding: 0 $card-gutter $card-gutter*2
 
 .cellContainer
   display: flex
@@ -11,6 +9,8 @@
 
 .cell
   display: block
+  box-sizing: border-box
+  padding: $card-gutter
   flex: 1 0 $mobile-column-width
 
   @media screen and (min-width: $grid-tablet-breakpoint)
@@ -18,3 +18,19 @@
 
   @media screen and (min-width: $grid-desktop-breakpoint)
     flex-basis: $desktop-column-width
+
+.cellCard
+  background: #fff
+  padding: 8px
+  border-radius: 3px
+
+.rowHeader
+  padding-left: 8px
+
+.isDivider
+  border-top: 1px solid rgba(#000, .22)
+  margin-top: 32px
+
+.isDivider:first-child
+  border-top: 0
+  margin-top: 0

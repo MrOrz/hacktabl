@@ -1,22 +1,25 @@
 @import '../sass/_variables.sass'
 
+$header-cell-padding: 8px
+
 .positionRow
-  padding-left: $row-padding
+  padding: 0 $card-gutter
   overflow: hidden
 
 .headerContainer
   will-change: transform
   min-width: 100%
 
-
 .columnHeaderNav
-  padding-left: 0
+  padding-left: 0 // Cancel out <ul> paddings
   display: flex
   flex-flow: row
 
 $itemLineHeight: 24px
 .columnHeaderNav li
   display: block
+  box-sizing: border-box
+  padding: 0 $header-cell-padding
   font-size: 16px
   line-height: $itemLineHeight
   flex: 1 0 $mobile-column-width
@@ -30,14 +33,12 @@ $itemLineHeight: 24px
 
 .isDivider
   border-left: 1px solid rgba(#fff, .22)
-  margin-left: -$row-padding
-  padding-left: $row-padding
+  padding-left: $header-cell-padding - 1
 
 .isDivider:first-child
   // don't show left border if the item is left-most
   border: 0
-  margin-left: 0
-  padding-left: 0
+  padding-left: $header-cell-padding
 
 .ancestorText
   color: rgba(#fff, .56)
