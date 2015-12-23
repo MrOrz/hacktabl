@@ -1,0 +1,20 @@
+@import '../sass/_variables.sass'
+
+.row
+  padding: 0 $row-padding
+  display: flex
+  flex-flow: column
+
+.cellContainer
+  display: flex
+  flex-flow: row
+  margin: 0 auto
+
+.cell
+  display: block
+  width: $mobile-column-width
+  max-width: $column-max-width
+  flex: 0 0 auto
+
+  @media screen and (min-width: $grid-tablet-breakpoint)
+    width: $tablet-column-width

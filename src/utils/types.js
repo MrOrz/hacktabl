@@ -7,7 +7,7 @@ export const PARAGRAPH_TYPE = PropTypes.shape({
 });
 
 export const TABLE_CELL_PROPS = {
-  paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE).isRequired,
+  paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE),
   children: PropTypes.array, // For table row & column header cells
   cells: PropTypes.array // For leaf table row header
 }
