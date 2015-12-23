@@ -75,7 +75,7 @@ export default class Header extends React.Component {
           </button>
         </div>
         <div className={`mdl-layout__header-row ${styles.positionRow}`}>
-          <div style={{
+          <div className={styles.headerContainer} style={{
             transform: `translate3d(-${this.props.scrollLeft}px, 0, 0)`
           }}>
             {columnElem}
