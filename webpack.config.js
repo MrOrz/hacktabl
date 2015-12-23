@@ -48,9 +48,7 @@ var webpackCfg = {
           path.resolve(__dirname, './src/components')
         ],
         loader: ExtractText.extract('style-loader',
-          "css?modules&importLoaders=1!sass?sourceMap&indentedSyntax&includePaths[]=" +
-            path.resolve(__dirname, "./node_modules/compass-mixins/lib")
-        )
+          "css?modules&importLoaders=2&localIdentName=[name]_[local]_[hash:base64]!postcss-loader!sass?sourceMap&indentedSyntax")
       },
       {
         test: /\.(?:jpg|png|gif|eot|svg|ttf|woff|woff2|otf)$/,
@@ -64,11 +62,12 @@ var webpackCfg = {
       }
     ],
     noParse: /vendor\/bower_components/
+
   },
   plugins: [
     new ExtractText( isProduction ? "[hash].css" : "index.css", { allChunks: false, disable: !isProduction } ),
-    new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
   ],
+  postcss: [require('autoprefixer')],
   debug: !isProduction,
   externals: {
     // require("jquery") is external and available

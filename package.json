@@ -4,6 +4,7 @@
   "description": "Comparison table generator, using Ethercalc and Google Doc as the content backend",
   "main": "index.html",
   "devDependencies": {
+    "autoprefixer": "^6.2.1",
     "babel": "^5.8.34",
     "babel-core": "^5.8.34",
     "babel-loader": "^5.3.3",
@@ -13,7 +14,6 @@
     "bootstrap-sass": "^3.3.5",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
-    "compass-mixins": "^0.12.7",
     "coveralls": "^2.11.4",
     "css-loader": "^0.15.6",
     "exports-loader": "^0.6.2",
@@ -33,6 +33,7 @@
     "node-sass": "^3.2.0",
     "object-assign": "^4.0.1",
     "parallelshell": "^2.0.0",
+    "postcss-loader": "^0.8.0",
     "raw-loader": "^0.5.1",
     "react": "^0.14.2",
     "react-pure-render": "^1.0.2",

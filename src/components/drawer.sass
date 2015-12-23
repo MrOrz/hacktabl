@@ -1,6 +1,4 @@
 @import '../../node_modules/material-design-lite/src/_variables.scss'
-@import 'compass/_css3.scss'
-@import 'compass/typography/text/_ellipsis.scss'
 
 $drawer-padding: 16px
 $item-border: 1px solid rgba(#000, .12)
@@ -17,7 +15,8 @@ $item-border: 1px solid rgba(#000, .12)
   border-bottom: $item-border
 
 .item
-  @ellipsis
+  text-overflow: ellipsis
+  white-space: nowrap
   padding: 0 $drawer-padding
   font-size: 16px
   line-height: 48px
@@ -37,7 +36,9 @@ $item-border: 1px solid rgba(#000, .12)
   border-top: $item-border
 
 .divider
-  @ellipsis
+  text-overflow: ellipsis
+  white-space: nowrap
+
   border-top: $item-border
   padding: 0 $drawer-padding
   font-size: 14px
