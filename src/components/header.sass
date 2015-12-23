@@ -1,6 +1,5 @@
-@import '../../node_modules/material-design-lite/src/_variables.scss';
+@import '../sass/_variables.sass'
 
-$row-padding: 16px
 .positionRow
   padding-left: $row-padding
   overflow: hidden
@@ -13,9 +12,13 @@ $row-padding: 16px
 $itemLineHeight: 24px
 .columnHeaderNav li
   display: block
-  width: 75vw
+  width: $mobile-column-width
+  max-width: $column-max-width
   font-size: 16px
   line-height: $itemLineHeight
+
+  @media screen and (min-width: $grid-tablet-breakpoint)
+    width: $tablet-column-width
 
 
 .isDivider
