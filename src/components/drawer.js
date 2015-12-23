@@ -45,7 +45,6 @@ export class RowTitleNav extends PureComponent {
     let items = [];
     let lastDividerText = null;
 
-    // traverse(this.props.rows, [], 0);
     for(let row of iterateRows(this.props.rows)){
       let content = concatAllParagraphs(row.headers[row.headers.length-1]);
 
