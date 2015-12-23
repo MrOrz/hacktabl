@@ -1,7 +1,8 @@
 @import '../../node_modules/material-design-lite/src/_variables.scss';
 
+$row-padding: 16px
 .positionRow
-  padding-left: 16px
+  padding-left: $row-padding
   overflow: hidden
 
 .columnHeaderNav
@@ -9,6 +10,43 @@
   display: flex
   flex-flow: row
 
+$itemLineHeight: 24px
 .columnHeaderNav li
   display: block
   width: 75vw
+  font-size: 16px
+  line-height: $itemLineHeight
+
+
+.isDivider
+  border-left: 1px solid rgba(#fff, .22)
+  margin-left: -$row-padding
+  padding-left: $row-padding
+
+.isDivider:first-child
+  // don't show left border if the item is left-most
+  border: 0
+  margin-left: 0
+  padding-left: 0
+
+.ancestorText
+  color: rgba(#fff, .56)
+  font-weight: bold
+  white-space: nowrap
+  font-size: 14px
+  text-overflow: ellipsis
+
+.itemText
+  white-space: nowrap
+  text-overflow: ellipsis
+
+
+li.nestedItem
+  padding-top: $itemLineHeight
+  white-space: nowrap
+  text-overflow: ellipsis
+
+li.noAncestorItem
+  white-space: nowrap
+  text-overflow: ellipsis
+  line-height: $itemLineHeight * 2

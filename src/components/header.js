@@ -12,15 +12,31 @@ class ColumnTitleNav extends PureComponent{
     let lastAncestorText = null;
 
     for(let column of iterateColumnHeaders(this.props.columns)) {
+      // Aggergate content of ancestor headers
+      //
       let ancestorText = column.slice(0, -1).map(
-        paragraphs => concatAllParagraphs(paragraphs)).join('／');
+        paragraphs => concatAllParagraphs(paragraphs) + '／').join();
       let content = concatAllParagraphs(column[column.length-1]);
 
-      if(ancestorText && ancestorText !== lastAncestorText) {
-        items.push(<li key={`${ancestorText}-${content}`}>{ancestorText}<br/>{content}</li>)
-        lastAncestorText = ancestorText;
+      if(ancestorText) {
+        if( ancestorText !== lastAncestorText ){
+          // Should add ancestor text
+          //
+          items.push(
+            <li key={`${ancestorText}-${content}`} className={styles.isDivider}>
+              <div className={styles.ancestorText}>{ancestorText}</div>
+              <div className={styles.itemText}>{content}</div>
+            </li>
+          )
+          lastAncestorText = ancestorText;
+        } else {
+          // Has ancestors, so it should appear nested
+          //
+          items.push(<li key={`${ancestorText}-${content}`} className={styles.nestedItem}>{content}</li>)
+        }
       } else {
-        items.push(<li key={content}>{content}</li>)
+        // Has no ancestor
+        items.push(<li key={content} className={`${styles.noAncestorItem} ${styles.isDivider}`}>{content}</li>)
       }
     }
 
