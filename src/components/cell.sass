@@ -52,18 +52,36 @@ $cropping-margin: 10px
   padding: $cell-padding
   border-top: 1px solid #eee
   will-change: padding, margin, border-radius
+  position: relative // For its "before" element
 
 .cellItem:first-child
   border-top: 0
 
-.activeCellItem
+.cellItem:before
+  // Use before element to create hover-card effect.
+  // Manipulates opacity, which is under hardware acceleration.
+  //
+  content: ''
   background: #fff
-  margin: -$active-cell-extrude-size
-  padding: $active-cell-extrude-size + $cell-padding
+
+  opacity: 0
+  will-change: opacity
+  transition: opacity 2s linear
   border-radius: 2px
   +shadow-3dp
-  position: relative
+  z-index: -1 // Stacking context: cellItem
+  position: absolute
+  left: -$active-cell-extrude-size
+  top: -$active-cell-extrude-size
+  right: -$active-cell-extrude-size
+  bottom: -$active-cell-extrude-size
+
+
+.activeCellItem
   z-index: 1 // Higher than other cellItems
+
+.activeCellItem:before
+  opacity: 1
 
 .hasComment
   border-bottom: 1px dashed unquote("rgb(#{$color-primary})")
@@ -75,7 +93,7 @@ $cropping-margin: 10px
   color: rgba(#fff, .8)
   +shadow-3dp
   will-change: height
-  animation: expand .5s
+  animation: expand .7s ease-out
 
 @keyframes expand
   0%
