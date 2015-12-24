@@ -3,7 +3,7 @@
 .cell
   display: block
   box-sizing: border-box
-  padding: $card-gutter
+  padding: $data-cell-gutter
   flex: 1 0 $mobile-column-width
 
   @media screen and (min-width: $grid-tablet-breakpoint)
@@ -12,24 +12,24 @@
   @media screen and (min-width: $grid-desktop-breakpoint)
     flex-basis: $desktop-column-width
 
-.cellCard
+.cellContent
   background: #fff
   border-radius: 3px
 
-.cellCardHeader
+.cellContentHeader
   font-size: 18px
   padding: 8px
   border-bottom: 1px solid #eee
   margin-bottom: 7px
 
-.cellCardHeader:last-child
+.cellContentHeader:last-child
   border-bottom: 0
   margin-bottom: 0
 
-.cellCardBody
+.cellContentBody
   padding: 8px
 
-.cellCardCropper
+.cellContentCropper
   overflow: hidden
 
 .rowHeader

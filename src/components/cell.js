@@ -35,8 +35,6 @@ class Run extends React.Component {
   _handleClick(evt) {
     // Ignore if no any comment to show for this run
     if(this.props.commentIds.length === 0){ return }
-    evt.stopPropagation() // Don't trigger card's click
-
     this.props.onClick(findDOMNode(this).getBoundingClientRect(), this.props.commentIds)
   }
 }
@@ -97,7 +95,7 @@ class CellContent extends PureComponent {
         (paragraph, idx) => <Paragraph key={idx} onRunClick={this.props.onRunClick} {...paragraph} />
       )
       summaryParagraphElem = (
-        <header className={styles.cellCardHeader}>
+        <header className={styles.cellContentHeader}>
           {pElems}
         </header>
       )
@@ -120,9 +118,9 @@ class CellContent extends PureComponent {
     }
 
     return (
-      <div className={styles.cellCard} style={this.props.style}>
+      <div className={styles.cellContent} style={this.props.style}>
         {summaryParagraphElem}
-        <div className={styles.cellCardBody}>
+        <div className={styles.cellContentBody}>
           {itemListElems}
           {elemWhenEmpty}
         </div>
@@ -139,8 +137,8 @@ export default class Cell extends React.Component {
     this._handleRunClick = this._handleRunClick.bind(this)
     this._handleClickAway = this._handleClickAway.bind(this)
     this.state = {
-      upperCardHeight: null,
-      lowerCardHeight: null,
+      upperContentHeight: null,
+      lowerContentHeight: null,
       commentIds: []
     }
   }
@@ -148,28 +146,28 @@ export default class Cell extends React.Component {
   render() {
     let commentElems = this.state.commentIds.map(id => <Comment key={id} {...this.props.commentMap[id]} />)
 
-    if(this.state.upperCardHeight === null){
+    if(this.state.upperContentHeight === null){
       return (
         <div className={styles.cell}>
-          <CellContent ref="card" onRunClick={this._handleRunClick} {...this.props} />
+          <CellContent ref="content" onRunClick={this._handleRunClick} {...this.props} />
         </div>
       )
     }else{
       return (
         <div className={styles.cell}>
-          <div className={styles.cellCardCropper} style={{
-            height: `${this.state.upperCardHeight}px`
+          <div className={styles.cellContentCropper} style={{
+            height: `${this.state.upperContentHeight}px`
           }}>
-            <CellContent ref="upperCard" onRunClick={this._handleRunClick} {...this.props} />
+            <CellContent ref="upperContent" onRunClick={this._handleRunClick} {...this.props} />
           </div>
           <div className={styles.commentBlock}>
             {commentElems}
           </div>
-          <div className={styles.cellCardCropper} style={{
-            height: `${this.state.lowerCardHeight}px`
+          <div className={styles.cellContentCropper} style={{
+            height: `${this.state.lowerContentHeight}px`
           }}>
-            <CellContent ref="lowerCard" onRunClick={this._handleRunClick} style={{
-              transform: `translateY(${this.state.upperCardHeight*-1}px)`
+            <CellContent ref="lowerContent" onRunClick={this._handleRunClick} style={{
+              transform: `translateY(${this.state.upperContentHeight*-1}px)`
             }}  {...this.props}/>
           </div>
         </div>
@@ -179,25 +177,25 @@ export default class Cell extends React.Component {
 
   _handleRunClick(runRect, commentIds=[]) {
     let runBottom = runRect.bottom
-    let clickedCardRef
-    if(this.refs.card){
-      clickedCardRef = this.refs.card
+    let clickedContentRef
+    if(this.refs.content){
+      clickedContentRef = this.refs.content
     }else{
-      let upperCardBottom = findDOMNode(this.refs.upperCard).getBoundingClientRect().top + this.state.upperCardHeight
+      let upperContentBottom = findDOMNode(this.refs.upperContent).getBoundingClientRect().top + this.state.upperContentHeight
 
-      if(upperCardBottom >= runBottom) {
-        // Clicked run is at upper card
-        clickedCardRef = this.refs.upperCard
+      if(upperContentBottom >= runBottom) {
+        // Clicked run is at upper content
+        clickedContentRef = this.refs.upperContent
       }else {
-        clickedCardRef = this.refs.lowerCard
+        clickedContentRef = this.refs.lowerContent
       }
     }
 
-    let cardRect = findDOMNode(clickedCardRef).getBoundingClientRect()
+    let contentRect = findDOMNode(clickedContentRef).getBoundingClientRect()
 
     this.setState({
-      upperCardHeight: runBottom - cardRect.top,
-      lowerCardHeight: cardRect.bottom - runBottom,
+      upperContentHeight: runBottom - contentRect.top,
+      lowerContentHeight: contentRect.bottom - runBottom,
       commentIds
     })
 
@@ -210,8 +208,8 @@ export default class Cell extends React.Component {
     if(findDOMNode(this).contains(e.target)) {return}
 
     this.setState({
-      upperCardHeight: null,
-      lowerCardHeight: null,
+      upperContentHeight: null,
+      lowerContentHeight: null,
       commentIds: []
     })
 
