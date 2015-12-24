@@ -3,6 +3,7 @@ import {findDOMNode} from 'react-dom';
 import styles from './header.sass';
 import upgradeToMdl from '../utils/upgrade';
 import PureComponent from 'react-pure-render/component';
+import {connect} from 'react-redux'
 import {iterateColumnHeaders, concatAllParagraphs} from '../utils/traverse';
 import {TABLE_CELL_TYPE, TABLE_TYPE, CONFIG_TYPE} from '../utils/types'
 
@@ -52,7 +53,7 @@ ColumnTitleNav.propTypes = {
   columns: PropTypes.arrayOf(TABLE_CELL_TYPE)
 }
 
-export default class Header extends React.Component {
+class Header extends React.Component {
   render() {
     let title = 'Hacktabl';
     let columnElem = '';
@@ -95,5 +96,8 @@ export default class Header extends React.Component {
 
 Header.propTypes = {
   table: TABLE_TYPE,
-  config: CONFIG_TYPE
+  config: CONFIG_TYPE,
+  scrollLeft: PropTypes.number
 }
+
+export default connect(state => state.ui)(Header)

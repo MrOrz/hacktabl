@@ -3,6 +3,7 @@ import {findDOMNode} from 'react-dom';
 import styles from './app.sass';
 import upgradeToMdl from '../utils/upgrade';
 import {connectToCurrentTable} from '../utils/connect';
+import {setUIState} from '../actions'
 
 import Header from './header';
 import Drawer from './drawer';
@@ -12,9 +13,6 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      scrollLeft: 0
-    };
 
     this.onMainScroll = this.onMainScroll.bind(this);
   }
@@ -31,13 +29,13 @@ class App extends React.Component {
     return (
       <div>
         <div ref="layout" className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
-          <Header table={table} config={config} scrollLeft={this.state.scrollLeft} />
+          <Header table={table} config={config} />
           <Drawer table={table} config={config} />
           <main className={`mdl-layout__content ${styles.main}`}
                 onScroll={this.onMainScroll}
                 ref="main">
             {this.props.children}
-            <Footer scrollLeft={this.state.scrollLeft} />
+            <Footer />
           </main>
         </div>
       </div>
@@ -57,7 +55,9 @@ class App extends React.Component {
     if(!this._frameRequested){
       this._frameRequested = true;
       requestAnimationFrame(() => {
-        this.setState({scrollLeft: this._scrollLeft});
+        this.props.dispatch(setUIState({
+          scrollLeft: this._scrollLeft
+        }))
         this._frameRequested = false;
       });
     }

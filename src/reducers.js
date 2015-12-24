@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
-import {FETCHING_TABLE, SET_TABLE, FETCHING_ERROR, NAVIGATE_TABLE} from './actions';
-import assign from 'object-assign';
+import {FETCHING_TABLE, SET_TABLE, FETCHING_ERROR, NAVIGATE_TABLE, SET_UI} from './actions';
 
 function table(state = {
   isFetching: false,
@@ -10,14 +9,14 @@ function table(state = {
 }, action) {
   switch(action.type){
     case FETCHING_TABLE:
-      return assign({}, state, {isFetching: action.payload.data});
+      return Object.assign({}, state, {isFetching: action.payload.data});
     case FETCHING_ERROR:
-      return assign({}, state, {
+      return Object.assign({}, state, {
         lastError: action.payload.data
       });
 
     case SET_TABLE:
-      return assign({}, state, {
+      return Object.assign({}, state, {
         lastFetchedAt: action.payload.timestamp,
         lastError: null,
         data: action.payload.data
@@ -33,7 +32,7 @@ export function tables(state={}, action) {
     case FETCHING_ERROR:
     case SET_TABLE:
       let tableId = action.payload.id;
-      return assign({}, state, {
+      return Object.assign({}, state, {
         [tableId]: table(state[tableId], action)
       });
 
@@ -51,9 +50,21 @@ export function currentTableId(state='', action) {
   }
 }
 
+export function ui(state={
+  scrollLeft: 0
+}, action) {
+  switch(action.type){
+    case SET_UI:
+      return Object.assign({}, state, action.payload)
+    default:
+      return state
+  }
+}
+
 var rootReducer = combineReducers({
   tables,
-  currentTableId
+  currentTableId,
+  ui
 });
 
 export default rootReducer;

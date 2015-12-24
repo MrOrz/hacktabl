@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
 import styles from './footer.sass';
 import upgradeToMdl from '../utils/upgrade';
@@ -32,4 +32,8 @@ class Footer extends React.Component {
   }
 }
 
-export default connect(state => state)(Footer);
+Footer.propTypes = {
+  scrollLeft: PropTypes.number
+}
+
+export default connect(state => state.ui)(Footer);

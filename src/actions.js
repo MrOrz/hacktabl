@@ -6,6 +6,7 @@ export const FETCHING_TABLE = 'FETCHING_TABLE';
 export const SET_TABLE = 'SET_TABLE';
 export const FETCHING_ERROR = 'FETCHING_ERROR';
 export const NAVIGATE_TABLE = 'NAVIGATE_TABLE';
+export const SET_UI = 'SET_UI'
 
 const setTable = (tableId, tableData, timestamp) => ({
   type: SET_TABLE,
@@ -90,5 +91,12 @@ export function navigateToTable(tableId) {
   return {
     type: NAVIGATE_TABLE,
     payload: tableId
+  }
+}
+
+export function setUIState(state) {
+  return {
+    type: SET_UI,
+    payload: state
   }
 }
