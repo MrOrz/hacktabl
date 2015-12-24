@@ -35,7 +35,7 @@ class Run extends React.Component {
   _handleClick(evt) {
     // Ignore if no any comment to show for this run
     if(this.props.commentIds.length === 0){ return }
-    this.props.onClick(findDOMNode(this).getBoundingClientRect(), this.props.commentIds)
+    this.props.onClick(this, this.props.commentIds)
   }
 }
 
@@ -67,12 +67,27 @@ function Paragraph (props) {
     }
   })
 
-  return <div>{childElems}</div>
+  let classNames = []
+  if(props.type === 'cellItem'){
+    classNames.push(styles.cellItem)
+    if(props.isActive){
+      classNames.push(styles.activeCellItem)
+      childElems.push(<div key="reference">This is some reference</div>)
+    }
+  }
+
+  return <div className={classNames.join(' ')}>{childElems}</div>
 }
 
 Paragraph.propTypes = Object.assign({}, PARAGRAPH_PROPS, {
-  onRunClick: PropTypes.func.isRequired
+  onRunClick: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(['normal', 'cellItem']),
+  isActive: PropTypes.bool // For type=cellItem
 })
+
+Paragraph.defaultProps = {
+  type: 'normal'
+}
 
 function Comment (props){
   let date = new Date(props.date)
@@ -101,17 +116,22 @@ class CellContent extends PureComponent {
       )
     }
 
-    let itemListElems = this.props.items.map((item, idx) => {
+    let listItemElems = this.props.items.map((item, idx) => {
       // "item" is in the type "Paragraph" with item.level >= 0.
       // "item.ref" will cause error because "ref" is reserved prop in React.js.
       //
       let paragraphProps = Object.assign({}, item, {reference: item.ref})
       delete paragraphProps.ref
-      return <Paragraph key={idx} onRunClick={this.props.onRunClick} {...paragraphProps} />
+      return (
+        <Paragraph key={idx} type="cellItem"
+                   isActive={idx===this.props.activeItemIdx}
+                   onRunClick={(runElem, commentIds) => this.props.onRunClick(runElem, commentIds, idx) }
+                   {...paragraphProps} />
+      )
     })
 
     let elemWhenEmpty = null
-    if(!summaryParagraphElem && itemListElems.length === 0) {
+    if(!summaryParagraphElem && listItemElems.length === 0) {
       elemWhenEmpty = (
         <span>This is empty</span>
       )
@@ -121,7 +141,7 @@ class CellContent extends PureComponent {
       <div className={styles.cellContent} style={this.props.style}>
         {summaryParagraphElem}
         <div className={styles.cellContentBody}>
-          {itemListElems}
+          {listItemElems}
           {elemWhenEmpty}
         </div>
       </div>
@@ -129,58 +149,87 @@ class CellContent extends PureComponent {
   }
 }
 
-CellContent.propTypes = DATA_CELL_PROPS
+CellContent.propTypes = Object.assign({}, DATA_CELL_PROPS, {
+  activeItemIdx: PropTypes.any,
+  onRunClick: PropTypes.func.isRequired
+})
 
 export default class Cell extends React.Component {
   constructor() {
     super()
     this._handleRunClick = this._handleRunClick.bind(this)
     this._handleClickAway = this._handleClickAway.bind(this)
+
     this.state = {
       upperContentHeight: null,
       lowerContentHeight: null,
-      commentIds: []
+      commentIds: [],
+      activeItemIdx: null
     }
   }
 
   render() {
-    let commentElems = this.state.commentIds.map(id => <Comment key={id} {...this.props.commentMap[id]} />)
+    let commentBlockElem = null // zero-height when no commentIds
+    if(this.state.commentIds.length > 0){
+      commentBlockElem = (
+        <div className={styles.commentBlock}>
+          {this.state.commentIds.map(id => <Comment key={id} {...this.props.commentMap[id]} />)}
+        </div>
+      )
+    }
 
     if(this.state.upperContentHeight === null){
       return (
         <div className={styles.cell}>
-          <CellContent ref="content" onRunClick={this._handleRunClick} {...this.props} />
+          <CellContent ref="content" onRunClick={this._handleRunClick}
+                       activeItemIdx={this.state.activeItemIdx}
+                       items={this.props.items}
+                       summaryParagraphs={this.props.summaryParagraphs} />
         </div>
       )
     }else{
       return (
         <div className={styles.cell}>
-          <div className={styles.cellContentCropper} style={{
-            height: `${this.state.upperContentHeight}px`
-          }}>
-            <CellContent ref="upperContent" onRunClick={this._handleRunClick} {...this.props} />
+          <div className={styles.cellContentCropper} style={{height: `${this.state.upperContentHeight}px`}}>
+            <CellContent ref="upperContent" onRunClick={this._handleRunClick}
+                         activeItemIdx={this.state.activeItemIdx}
+                         items={this.props.items}
+                         summaryParagraphs={this.props.summaryParagraphs} />
           </div>
-          <div className={styles.commentBlock}>
-            {commentElems}
+          <div className={styles.cellContentCropper}>
+            {commentBlockElem}
           </div>
-          <div className={styles.cellContentCropper} style={{
-            height: `${this.state.lowerContentHeight}px`
-          }}>
-            <CellContent ref="lowerContent" onRunClick={this._handleRunClick} style={{
-              transform: `translateY(${this.state.upperContentHeight*-1}px)`
-            }}  {...this.props}/>
+          <div className={styles.cellContentCropper} style={{height: `${this.state.lowerContentHeight}px`}}>
+            <CellContent ref="lowerContent" onRunClick={this._handleRunClick}
+                         activeItemIdx={this.state.activeItemIdx}
+                         items={this.props.items}
+                         summaryParagraphs={this.props.summaryParagraphs}
+                         style={{transform: `translateY(${this.state.upperContentHeight*-1}px)`}} />
           </div>
         </div>
       )
     }
   }
 
-  _handleRunClick(runRect, commentIds=[]) {
-    let runBottom = runRect.bottom
+  _handleRunClick(runElem, commentIds=[], activeItemIdx=null) {
+    // These would change the cell height, but does not destroy the runElem.
+    // Set these states first.
+    //
+    this.setState({
+      commentIds: [], // Set commentBlock height to 0
+      activeItemIdx
+    }, this._calculateSplitHeights.bind(this, runElem, commentIds))
+  }
+
+  _calculateSplitHeights(runElem, commentIds) {
+    let runBottom = findDOMNode(runElem).getBoundingClientRect().bottom
     let clickedContentRef
     if(this.refs.content){
       clickedContentRef = this.refs.content
     }else{
+      // Since commentBlock height is 0 now,
+      // we can calculate split heights without being interfered by commentBlock height.
+
       let upperContentBottom = findDOMNode(this.refs.upperContent).getBoundingClientRect().top + this.state.upperContentHeight
 
       if(upperContentBottom >= runBottom) {
@@ -194,9 +243,9 @@ export default class Cell extends React.Component {
     let contentRect = findDOMNode(clickedContentRef).getBoundingClientRect()
 
     this.setState({
+      commentIds,
       upperContentHeight: runBottom - contentRect.top,
       lowerContentHeight: contentRect.bottom - runBottom,
-      commentIds
     })
 
     document.addEventListener('click', this._handleClickAway)
@@ -210,7 +259,8 @@ export default class Cell extends React.Component {
     this.setState({
       upperContentHeight: null,
       lowerContentHeight: null,
-      commentIds: []
+      commentIds: [],
+      activeItemIdx: null
     })
 
     document.removeEventListener('click', this._handleClickAway)
