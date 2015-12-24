@@ -223,7 +223,7 @@ class TablePage extends React.Component {
 
   render() {
     let rowElems = []
-    if(!this.props.currentTable.data) {
+    if(!this.props.currentTable.data.table) {
       return <div>Loading...</div>
     }
 
