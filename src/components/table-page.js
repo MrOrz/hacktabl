@@ -82,6 +82,15 @@ Paragraph.propTypes = Object.assign({}, PARAGRAPH_PROPS, {
   onRunClick: PropTypes.func.isRequired
 })
 
+const Comment = (props) => <div>{props.text}</div>
+
+Comment.propTypes = {
+  author: PropTypes.string,
+  date: PropTypes.string,
+  text: PropTypes.string.isRequired,
+  type: PropTypes.string
+}
+
 class Cell extends React.Component {
   constructor() {
     super()
@@ -89,7 +98,8 @@ class Cell extends React.Component {
     this._handleClickAway = this._handleClickAway.bind(this)
     this.state = {
       upperCardHeight: null,
-      lowerCardHeight: null
+      lowerCardHeight: null,
+      commentIds: []
     }
   }
 
@@ -119,6 +129,8 @@ class Cell extends React.Component {
       )
     }
 
+    let commentElems = this.state.commentIds.map(id => <Comment key={id} {...this.props.commentMap[id]} />)
+
     if(this.state.upperCardHeight === null){
       return (
         <div className={styles.cell}>
@@ -133,7 +145,9 @@ class Cell extends React.Component {
           }}>
             {createCardElemWithRef('upperCard')}
           </div>
-          Comments!!
+          <div className={styles.commentBlock}>
+            {commentElems}
+          </div>
           <div className={styles.cellCardCropper} style={{
             height: `${this.state.lowerCardHeight}px`
           }}>
@@ -158,7 +172,7 @@ class Cell extends React.Component {
     }
   }
 
-  _handleRunClick(runRect, commentIds) {
+  _handleRunClick(runRect, commentIds=[]) {
     let runBottom = runRect.bottom
     let clickedCardRef
     if(this.refs.card){
@@ -178,7 +192,8 @@ class Cell extends React.Component {
 
     this.setState({
       upperCardHeight: runBottom - cardRect.top,
-      lowerCardHeight: cardRect.bottom - runBottom
+      lowerCardHeight: cardRect.bottom - runBottom,
+      commentIds
     })
 
     document.addEventListener('click', this._handleClickAway)
@@ -191,14 +206,17 @@ class Cell extends React.Component {
 
     this.setState({
       upperCardHeight: null,
-      lowerCardHeight: null
+      lowerCardHeight: null,
+      commentIds: []
     })
 
     document.removeEventListener('click', this._handleClickAway)
   }
 }
 
-Cell.propTypes = TABLE_CELL_PROPS
+Cell.propTypes = Object.assign({}, TABLE_CELL_PROPS, {
+  commentMap: PropTypes.object.isRequired
+})
 
 class RowHeader extends React.Component {
   render() {
@@ -231,7 +249,7 @@ class TablePage extends React.Component {
 
   render() {
     let rowElems = []
-    if(!this.props.currentTable.data.table) {
+    if(!(this.props.currentTable.data && this.props.currentTable.data.table)) {
       return <div>Loading...</div>
     }
 
@@ -242,7 +260,7 @@ class TablePage extends React.Component {
       let ancestorText = row.headers.slice(0, -1).map(
         paragraphs => concatAllParagraphs(paragraphs)).join('／');
 
-      let cellElems = row.cells.map((cellProps, idx) => <Cell {...cellProps} key={idx} />)
+      let cellElems = row.cells.map((cellProps, idx) => <Cell {...cellProps} commentMap={this.props.currentTable.data.table.commentMap} key={idx} />)
 
       let isDivider = ancestorText === '' || ancestorText !== lastAncestorText
 
