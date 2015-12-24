@@ -88,6 +88,7 @@ if( isProduction ){
   }));
 
   webpackCfg.plugins.push(new webpack.DefinePlugin({
+    DEBUG: false,
     GOOGLE_API_KEY: JSON.stringify('AIzaSyAA0OqwnzmbCumAAdx0F0cKACCs-s5ncQY') // allows http://hacktabl.org/*
   }));
 } else {
@@ -129,6 +130,7 @@ if( isProduction ){
 
   webpackCfg.plugins.push(new webpack.HotModuleReplacementPlugin());
   webpackCfg.plugins.push(new webpack.DefinePlugin({
+    DEBUG: true,
     GOOGLE_API_KEY: JSON.stringify('AIzaSyBgewvC_6aFKXJnnzX0y2tp0xPM2ZLdk_w') // allows http://localhost:5000/*
   }));
   webpackCfg.output.publicPath = '/build/'
