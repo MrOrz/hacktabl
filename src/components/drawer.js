@@ -5,7 +5,7 @@ import PureComponent from 'react-pure-render/component';
 import {connectToCurrentTable} from '../utils/connect';
 import {iterateRows, concatAllParagraphs} from '../utils/traverse';
 import upgradeToMdl from '../utils/upgrade';
-import {TABLE_TYPE, TABLE_CELL_TYPE, CONFIG_TYPE} from '../utils/types';
+import {TABLE_TYPE, HEADER_CELL_TYPE, CONFIG_TYPE} from '../utils/types';
 
 class RowTitleItem extends React.Component {
   render () {
@@ -102,7 +102,7 @@ export class RowTitleNav extends PureComponent {
 }
 
 RowTitleNav.propTypes = {
-  rows: PropTypes.arrayOf(TABLE_CELL_TYPE)
+  rows: PropTypes.arrayOf(HEADER_CELL_TYPE)
 };
 
 RowTitleNav.defaultProps = {

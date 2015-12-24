@@ -5,7 +5,7 @@ import upgradeToMdl from '../utils/upgrade';
 import PureComponent from 'react-pure-render/component';
 import {connect} from 'react-redux'
 import {iterateColumnHeaders, concatAllParagraphs} from '../utils/traverse';
-import {TABLE_CELL_TYPE, TABLE_TYPE, CONFIG_TYPE} from '../utils/types'
+import {HEADER_CELL_TYPE, TABLE_TYPE, CONFIG_TYPE} from '../utils/types'
 
 class ColumnTitleNav extends PureComponent{
   render() {
@@ -50,7 +50,7 @@ class ColumnTitleNav extends PureComponent{
 }
 
 ColumnTitleNav.propTypes = {
-  columns: PropTypes.arrayOf(TABLE_CELL_TYPE)
+  columns: PropTypes.arrayOf(HEADER_CELL_TYPE)
 }
 
 class Header extends React.Component {

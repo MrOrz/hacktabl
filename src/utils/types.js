@@ -19,25 +19,32 @@ export const PARAGRAPH_PROPS = {
   level: PropTypes.number.isRequired,
   children: PropTypes.arrayOf(PropTypes.oneOfType([RUN_TYPE, HYPERLINK_TYPE])).isRequired,
 
-  // For table items
+  // These exists only in table items
   //
   labels: PropTypes.arrayOf(PropTypes.string),
-  ref: PropTypes.arrayOf(PropTypes.oneOfType([RUN_TYPE, HYPERLINK_TYPE]))
+  reference: PropTypes.arrayOf(PropTypes.oneOfType([RUN_TYPE, HYPERLINK_TYPE]))
 }
 
 export const PARAGRAPH_TYPE = PropTypes.shape(PARAGRAPH_PROPS);
 
-export const TABLE_CELL_PROPS = {
-  paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE),
-  children: PropTypes.array, // For table row & column header cells
-  cells: PropTypes.array // For leaf table row header
+export const DATA_CELL_PROPS = {
+  items: PropTypes.arrayOf(PARAGRAPH_TYPE),
+  summaryParagraphs: PropTypes.arrayOf(PARAGRAPH_TYPE)
 }
 
-export const TABLE_CELL_TYPE = PropTypes.shape(TABLE_CELL_PROPS);
+export const DATA_CELL_TYPE = PropTypes.shape(DATA_CELL_PROPS);
+
+export const HEADER_CELL_PROPS = {
+  paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE),
+  children: PropTypes.array, // For table row & column header cells
+  cells: PropTypes.arrayOf(DATA_CELL_TYPE) // For leaf table row header
+}
+
+export const HEADER_CELL_TYPE = PropTypes.shape(HEADER_CELL_PROPS);
 
 export const TABLE_TYPE = PropTypes.shape({
-  columns: PropTypes.arrayOf(TABLE_CELL_TYPE).isRequired,
-  rows: PropTypes.arrayOf(TABLE_CELL_TYPE).isRequired,
+  columns: PropTypes.arrayOf(HEADER_CELL_TYPE).isRequired,
+  rows: PropTypes.arrayOf(HEADER_CELL_TYPE).isRequired,
   commentMap: PropTypes.object // Key-value pair
 });
 
