@@ -35,7 +35,7 @@
     "parallelshell": "^2.0.0",
     "postcss-loader": "^0.8.0",
     "raw-loader": "^0.5.1",
-    "react": "^0.14.2",
+    "react": "^0.14.3",
     "react-pure-render": "^1.0.2",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0",
