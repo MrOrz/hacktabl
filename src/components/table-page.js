@@ -86,7 +86,7 @@ class Cell extends React.Component {
   constructor() {
     super()
     this._handleRunClick = this._handleRunClick.bind(this)
-    this._handleClick = this._handleClick.bind(this)
+    this._handleClickAway = this._handleClickAway.bind(this)
     this.state = {
       upperCardHeight: null,
       lowerCardHeight: null
@@ -127,7 +127,7 @@ class Cell extends React.Component {
       )
     }else{
       return (
-        <div className={styles.cell} onClick={this._handleClick}>
+        <div className={styles.cell}>
           <div className={styles.cellCardCropper} style={{
             height: `${this.state.upperCardHeight}px`
           }}>
@@ -180,13 +180,21 @@ class Cell extends React.Component {
       upperCardHeight: runBottom - cardRect.top,
       lowerCardHeight: cardRect.bottom - runBottom
     })
+
+    document.addEventListener('click', this._handleClickAway)
   }
 
-  _handleClick() {
+  _handleClickAway(e) {
+    // Skip if the clicked target is inside this cell
+    //
+    if(findDOMNode(this).contains(e.target)) {return}
+
     this.setState({
       upperCardHeight: null,
       lowerCardHeight: null
     })
+
+    document.removeEventListener('click', this._handleClickAway)
   }
 }
 
