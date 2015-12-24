@@ -6,16 +6,94 @@ import styles from './table-page.sass';
 import {loadTable, navigateToTable} from '../actions';
 import {connectToCurrentTable} from '../utils/connect';
 import {iterateRows, concatAllParagraphs} from '../utils/traverse';
-import {TABLE_CELL_PROPS} from '../utils/types'
+import {TABLE_CELL_PROPS, RUN_PROPS, HYPERLINK_PROPS, PARAGRAPH_PROPS} from '../utils/types'
+
+class Run extends React.Component {
+  render() {
+    let style = {}
+    let classNames = []
+
+    if(true) { // config.HIGHLIGHT
+      if(this.props.isB) {style.fontWeight = 'bold'}
+      if(this.props.isU) {style.textDecoration = 'underline'}
+      if(this.props.isI) {style.fontStyle = 'italic'}
+    }
+
+    if(this.props.commentIds.length) {
+      classNames.push(styles.hasComment)
+    }
+
+    return (
+      <span className={classNames.join(' ')} style={style}>{this.props.text}</span>
+    )
+  }
+}
+
+Run.propTypes = RUN_PROPS
+Run = connect(state => ((state.tables[state.currentTableId]||{}).config || {}))(Run)
+
+class Hyperlink extends React.Component {
+  render() {
+    let runElems = this.props.runs.map((run, id) => (
+      <Run {...run} key={id} />
+    ))
+    return (
+      <a href={this.props.href}>{runElems}</a>
+    )
+  }
+}
+
+Hyperlink.propTypes = HYPERLINK_PROPS
+
+class Paragraph extends React.Component {
+  render () {
+    let childElems = this.props.children.map((child, idx) => {
+      if(child.href) {
+        return <Hyperlink {...child} key={idx} />
+      } else {
+        return <Run {...child} key={idx} />
+      }
+    })
+
+    return <div>{childElems}</div>
+  }
+}
+
+Paragraph.propTypes = PARAGRAPH_PROPS
 
 class Cell extends React.Component {
   render() {
+    let summaryParagraphElem = null
+    if(this.props.summaryParagraphs.length>0 &&
+       this.props.summaryParagraphs[0].children.length>0){
+      let pElems = this.props.summaryParagraphs.map((paragraph, idx) => <Paragraph key={idx} {...paragraph} />)
+      summaryParagraphElem = (
+        <header className={styles.cellCardHeader}>
+          {pElems}
+        </header>
+      )
+    }
+
+    let itemListElems = this.props.items.map((item, idx) => {
+      // item is in the type "Paragraph" with item.level >= 0
+      return <Paragraph key={idx} {...item} />
+    })
+
+    let elemWhenEmpty = null
+    if(!summaryParagraphElem && itemListElems.length === 0) {
+      elemWhenEmpty = (
+        <span>This is empty</span>
+      )
+    }
+
     return (
       <div className={styles.cell}>
         <div className={styles.cellCard}>
-          <pre>
-            {JSON.stringify(this.props, null, '  ')}
-          </pre>
+          {summaryParagraphElem}
+          <div className={styles.cellCardBody}>
+            {itemListElems}
+            {elemWhenEmpty}
+          </div>
         </div>
       </div>
     )

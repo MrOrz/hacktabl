@@ -1,10 +1,31 @@
 import {PropTypes} from 'react';
 
-export const PARAGRAPH_TYPE = PropTypes.shape({
-  children: PropTypes.arrayOf(PropTypes.shape({
-    text: PropTypes.string
-  })).isRequired
-});
+export const RUN_PROPS = {
+  text: PropTypes.string.isRequired,
+  commentIds: PropTypes.arrayOf(PropTypes.string),
+  isB: PropTypes.bool, isU: PropTypes.bool, isI: PropTypes.bool
+}
+
+export const RUN_TYPE = PropTypes.shape(RUN_PROPS)
+
+export const HYPERLINK_PROPS = {
+  href: PropTypes.string.isRequired,
+  runs: PropTypes.arrayOf(RUN_TYPE).isRequired
+}
+
+export const HYPERLINK_TYPE = PropTypes.shape(HYPERLINK_PROPS)
+
+export const PARAGRAPH_PROPS = {
+  level: PropTypes.number.isRequired,
+  children: PropTypes.arrayOf(PropTypes.oneOfType([RUN_TYPE, HYPERLINK_TYPE])).isRequired,
+
+  // For table items
+  //
+  labels: PropTypes.arrayOf(PropTypes.string),
+  ref: PropTypes.arrayOf(PropTypes.oneOfType([RUN_TYPE, HYPERLINK_TYPE]))
+}
+
+export const PARAGRAPH_TYPE = PropTypes.shape(PARAGRAPH_PROPS);
 
 export const TABLE_CELL_PROPS = {
   paragraphs: PropTypes.arrayOf(PARAGRAPH_TYPE),

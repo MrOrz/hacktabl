@@ -21,12 +21,23 @@
 
 .cellCard
   background: #fff
-  padding: 8px
   border-radius: 3px
+
+.cellCardHeader
+  font-size: 18px
+  padding: 8px
+  border-bottom: 1px solid #eee
+  margin-bottom: 7px
+
+.cellCardHeader:last-child
+  border-bottom: 0
+  margin-bottom: 0
+
+.cellCardBody
+  padding: 8px
 
 .rowHeader
   will-change: transform
-  transition: transform .2s ease
   padding-left: 8px
 
 .isDivider
@@ -36,3 +47,6 @@
 .isDivider:first-child
   border-top: 0
   margin-top: 0
+
+.hasComment
+  border-bottom: 1px dashed unquote("rgb(#{$color-primary})")
