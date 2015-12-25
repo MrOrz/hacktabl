@@ -102,6 +102,26 @@ $cropping-margin: 10px
 .hasComment
   border-bottom: 1px dashed unquote("rgb(#{$color-primary-dark})")
 
+.reference
+  $margin: $active-cell-extrude-size + $cell-padding
+  margin: $margin (-$margin) (-$margin) (-$margin)
+  border-top: 1px solid $table-bg
+  padding: ($margin - 1) $margin $margin ($margin + 24px)
+
+  // For the book icon
+  position: relative
+
+  &:before
+    content: 'launch'
+    +material-icon-font
+    font-size: 16px
+    color: rgba(#000, .56)
+
+    position: absolute
+    left: $margin
+    top: $margin
+
+
 .commentBlock
   padding: $active-cell-extrude-size + $cell-padding
   margin: 0 (-$active-cell-extrude-size)

@@ -52,36 +52,45 @@ function Hyperlink(props) {
   let runElems = props.runs.map((run, id) => (
     <Run {...run} key={id} onClick={props.onRunClick} />
   ))
+  let anchorProps = {}
+  if(props.target){
+    anchorProps.target = props.target
+  }
+
   return (
-    <a href={props.href}>{runElems}</a>
+    <a href={props.href} {...anchorProps}>{runElems}</a>
   )
 }
 
 Hyperlink.propTypes = Object.assign({}, HYPERLINK_PROPS, {
-  onRunClick: PropTypes.func.isRequired
+  onRunClick: PropTypes.func.isRequired,
+  target: PropTypes.func.string
 })
 
 class Paragraph extends PureComponent {
   constructor(){
     super()
     this._handleClick = this._handleClick.bind(this)
+    this._mapChildToElem = this._mapChildToElem.bind(this)
   }
 
   render(){
-    let childElems = this.props.children.map((child, idx) => {
-      if(child.href) {
-        return <Hyperlink {...child} key={idx} onRunClick={this.props.onRunClick} />
-      } else {
-        return <Run {...child} key={idx} onClick={this.props.onRunClick} />
-      }
-    })
+    let childElems = this.props.children.map(this._mapChildToElem())
 
     let classNames = []
     if(this.props.type === 'cellItem'){
       classNames.push(styles.cellItem)
       if(this.props.isActive){
         classNames.push(styles.activeCellItem)
-        childElems.push(<div key="reference">This is some reference</div>)
+
+        if(this.props.reference.length > 0){
+          let refChildElems = this.props.reference.map(this._mapChildToElem('_blank'))
+          childElems.push(
+            <div key="reference" className={styles.reference}>
+              {refChildElems}
+            </div>
+          )
+        }
       }
     }
 
@@ -91,6 +100,16 @@ class Paragraph extends PureComponent {
   _handleClick() {
     if(!this.props.onClick){ return }
     this.props.onClick(this.props.activeIdx)
+  }
+
+  _mapChildToElem(anchorTarget) {
+    return (child, idx) => {
+      if(child.href) {
+        return <Hyperlink {...child} key={idx} onRunClick={this.props.onRunClick} target={anchorTarget} />
+      } else {
+        return <Run {...child} key={idx} onClick={this.props.onRunClick} />
+      }
+    }
   }
 }
 
