@@ -1,7 +1,7 @@
 // This directly mutates table data returned by server.
 //
 
-// Underline: [GREEN | RED | YELLOW | DASHED | DOTTED]_UNDERLINE
+// Lines: [GREEN | RED | YELLOW | DASHED | DOTTED]_UNDERLINE | STRIKE_THROUGH
 // Font color: GREEN | RED | YELLOW | GRAY
 // [?] suffix: QUESTION_INDICATOR
 // [!] suffix: EXCLAMATION_INDICATOR
@@ -10,8 +10,8 @@
 const DEFAULT_COMMENT_TYPE_MAP = {
   '出處爭議': ['GRAY', 'RED_UNDERLINE', 'DOTTED_UNDERLINE', 'EXCLAMATION_INDICATOR'],
   '質疑': ['RED_UNDERLINE'],
-  '補充說明': ['GREEN_UNDERLINE'],
-  '需要出處': ['GRAY', 'QUESTION_INDICATOR']
+  '補充說明': ['GREEN', 'GREEN_UNDERLINE', 'DASHED_UNDERLINE'],
+  '需要出處': ['GRAY', 'QUESTION_INDICATOR', 'STRIKE_THROUGH']
 }
 
 export default function processTableData(data) {
