@@ -2,10 +2,13 @@ import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom'
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
+import {connectToCurrentTableConfig} from '../utils/connect'
 import PureComponent from 'react-pure-render/component'
 
 import styles from './cell.sass';
-import {DATA_CELL_PROPS, RUN_PROPS, HYPERLINK_PROPS, PARAGRAPH_PROPS} from '../utils/types'
+import {DATA_CELL_PROPS, RUN_PROPS, HYPERLINK_PROPS, PARAGRAPH_PROPS, CONFIG_TYPE} from '../utils/types'
+
+console.log('STYLES', styles)
 
 class Run extends React.Component {
   constructor() {
@@ -15,17 +18,28 @@ class Run extends React.Component {
 
   render() {
     let style = {}
-    let classNames = []
+    let classNames = [styles.run]
 
-    if(true) { // config.HIGHLIGHT
+    if(this.props.config.HIGHLIGHT) {
       if(this.props.isB) {style.fontWeight = 'bold'}
       if(this.props.isU) {style.textDecoration = 'underline'}
       if(this.props.isI) {style.fontStyle = 'italic'}
     }
 
-    if(this.props.commentIds.length) {
-      classNames.push(styles.hasComment)
-    }
+
+    // Styling by comment types
+    this.props.commentIds.forEach(commentId => {
+      let type = this.props.commentMap[commentId].type
+      let labelClassNames = this.props.config.LABEL_CLASS_NAME_MAP[type]
+      if(labelClassNames){
+        let hashedClassNames = labelClassNames.map(cls => styles[cls])
+        classNames.push.apply(classNames, hashedClassNames)
+      }else{
+        classNames.push(styles.hasUnidentifiedComment)
+      }
+    })
+
+
 
     return (
       <span className={classNames.join(' ')} style={style} onClick={this._handleClick}>{this.props.text}</span>
@@ -43,14 +57,16 @@ class Run extends React.Component {
 }
 
 Run.propTypes = Object.assign({}, RUN_PROPS, {
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  config: CONFIG_TYPE.isRequired, // table config
+  commentMap: PropTypes.object
 })
 
-Run = connect(state => ((state.tables[state.currentTableId]||{}).config || {}))(Run)
+Run = connect(state => ({commentMap: ((state.tables[state.currentTableId]||{}).data.table||{}).commentMap}))(Run)
 
 function Hyperlink(props) {
   let runElems = props.runs.map((run, id) => (
-    <Run {...run} key={id} onClick={props.onRunClick} />
+    <Run {...run} key={id} onClick={props.onRunClick} config={props.config} />
   ))
   let anchorProps = {}
   if(props.target){
@@ -64,7 +80,8 @@ function Hyperlink(props) {
 
 Hyperlink.propTypes = Object.assign({}, HYPERLINK_PROPS, {
   onRunClick: PropTypes.func.isRequired,
-  target: PropTypes.string
+  target: PropTypes.string,
+  config: CONFIG_TYPE.isRequired
 })
 
 class Paragraph extends PureComponent {
@@ -85,7 +102,7 @@ class Paragraph extends PureComponent {
     if(this.props.type === 'cellItem'){
       classNames.push(styles.cellItem)
       if(this.props.isActive){
-        classNames.push(styles.activeCellItem)
+        classNames.push(styles.isActive)
 
         if(this.props.reference.length > 0){
           let refChildElems = this.props.reference.map(this._mapChildToElem('_blank'))
@@ -95,6 +112,11 @@ class Paragraph extends PureComponent {
             </div>
           )
         }
+      }
+
+      if(this.props.currentTableConfig.EMPHASIZE_NO_REF &&
+         this.props.reference.length === 0){
+        classNames.push(styles.hasNoRef)
       }
     }
 
@@ -109,9 +131,11 @@ class Paragraph extends PureComponent {
   _mapChildToElem(anchorTarget) {
     return (child, idx) => {
       if(child.href) {
-        return <Hyperlink {...child} key={idx} onRunClick={this.props.onRunClick} target={anchorTarget} />
+        return <Hyperlink {...child} key={idx} onRunClick={this.props.onRunClick}
+                          target={anchorTarget} config={this.props.currentTableConfig} />
       } else {
-        return <Run {...child} key={idx} onClick={this.props.onRunClick} />
+        return <Run {...child} key={idx} onClick={this.props.onRunClick}
+                    config={this.props.currentTableConfig} />
       }
     }
   }
@@ -129,9 +153,27 @@ Paragraph.defaultProps = {
   type: 'normal'
 }
 
+Paragraph = connectToCurrentTableConfig(Paragraph)
+
 function Comment (props){
   let date = new Date(props.date)
-  return <div>{props.text}</div>
+  let typeClassNames = props.currentTableConfig.LABEL_CLASS_NAME_MAP[props.type]
+
+  if(typeClassNames){
+    typeClassNames = typeClassNames.map(cls => styles[cls])
+  }else{
+    typeClassNames = []
+  }
+
+  return (
+    <article className={styles.comment}>
+      <header title={date.toLocaleString()}>
+        <div className={`${styles.commentType} ${typeClassNames.join(' ')}`}>{props.type}</div>
+        <div className={styles.commentAuthor}>by {props.author}</div>
+      </header>
+      <div>{props.text || '其他'}</div>
+    </article>
+  )
 }
 
 Comment.propTypes = {
@@ -140,6 +182,8 @@ Comment.propTypes = {
   text: PropTypes.string.isRequired,
   type: PropTypes.string
 }
+
+Comment = connectToCurrentTableConfig(Comment)
 
 // Cannot be a stateless function because we need putting refs on CellContent.
 //
@@ -159,17 +203,14 @@ class CellContent extends PureComponent {
     }
 
     let listItemElems = this.props.items.map((item, idx) => {
-      // "item" is in the type "Paragraph" with item.level >= 0.
-      // "item.ref" will cause error because "ref" is reserved prop in React.js.
-      //
-      let paragraphProps = Object.assign({}, item, {reference: item.ref})
-      delete paragraphProps.ref
       return (
         <Paragraph key={idx} type="cellItem"
                    isActive={idx===this.props.activeItemIdx}
                    onClick={this.props.onItemClick} activeIdx={idx}
                    onRunClick={(runElem, commentIds) => this.props.onRunClick(runElem, commentIds, idx) }
-                   {...paragraphProps} />
+
+                   level={item.level} children={item.children}
+                   labels={item.labels} reference={item.ref} />
       )
     })
 

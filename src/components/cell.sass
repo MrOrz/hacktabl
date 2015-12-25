@@ -113,15 +113,56 @@ $cropping-margin: 10px
   //
   border-top: 1px solid $table-bg
 
-.activeCellItem
-  background-color: #fff
-  z-index: 1 // Higher than other cellItems
+  &.isActive
+    background-color: #fff
+    z-index: 1 // Higher than other cellItems
 
-.activeCellItem:before
-  opacity: 1
+  &.isActive:before
+    opacity: 1
 
-.hasComment
-  border-bottom: 1px dashed unquote("rgb(#{$color-primary-dark})")
+  &.hasNoRef
+    color: #ccc
+    text-decoration: line-through
+
+.run
+  // Default border-bottom
+  &.hasUnidentifiedComment, &.RED_UNDERLINE, &.GREEN_UNDERLINE, &.YELLOW_UNDERLINE, &.DASHED_UNDERLINE, &.DOTTED_UNDERLINE
+    border-bottom: 1px solid #ccc
+  &.GREEN_UNDERLINE
+    border-bottom-color: $green
+  &.YELLOW_UNDERLINE
+    border-bottom-color: $yellow
+  &.RED_UNDERLINE
+    border-bottom-color: $red
+  &.DASHED_UNDERLINE
+    border-bottom-style: dashed
+  &.DOTTED_UNDERLINE
+    border-bottom-style: dotted
+
+  &.GREEN
+    color: $green
+  &.GRAY
+    color: rgba(#000, .22)
+  &.YELLOW
+    color: $yellow
+  &.RED
+    color: $red
+
+  &.QUESTION_INDICATOR:after, &.EXCLAMATION_INDICATOR:after, &.MORE_INDICATOR:after
+    font-size: 12px
+    font-weight: bold
+    display: inline-block
+    transform-origin: left top
+    transform: translateY(-1px) scale(.8)
+    font-style: italic
+
+  &.QUESTION_INDICATOR:after
+    content: '[ ? ]'
+  &.EXCLAMATION_INDICATOR:after
+    content: '[ ! ]'
+  &.MORE_INDICATOR:after
+    content: '[⋯]'
+
 
 .reference
   $margin: $active-cell-extrude-size + $cell-padding
@@ -142,15 +183,52 @@ $cropping-margin: 10px
     left: $margin
     top: $margin
 
-
 .commentBlock
-  padding: $active-cell-extrude-size + $cell-padding
+  padding: $active-cell-extrude-size + $cell-padding 0
   margin: 0 (-$active-cell-extrude-size)
   background: $comment-bg-color
   color: rgba(#fff, .8)
   +shadow-3dp
   will-change: height
   animation: expand .3s ease-out
+
+.comment
+  padding: 8px ($active-cell-extrude-size + $cell-padding) 0
+  margin-top: 4px
+  border-top: 1px solid $cell-bg-color
+
+  header
+    display: flex
+    margin-bottom: 4px
+
+  footer
+    font-size: 12px
+    color: rgba(#fff, .12)
+
+.comment:first-child
+  border-top: 0
+  margin-top: 0
+  padding-top: 0
+
+.commentType
+  font-size: 12px
+  line-height: 1
+  padding: 4px 8px
+  background: #999
+  color: #fff
+  margin-right: auto
+  border-radius: 2px
+
+  &.GREEN_UNDERLINE, &.GREEN
+    background: $green
+  &.YELLOW_UNDERLINE, &.YELLOW
+    background: $yellow
+  &.RED_UNDERLINE, &.RED
+    background: $red
+
+.commentAuthor
+  color: rgba(#fff, .56)
+  font-size: 13px
 
 @keyframes expand
   0%
