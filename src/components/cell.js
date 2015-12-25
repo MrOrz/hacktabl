@@ -249,9 +249,10 @@ export default class Cell extends React.Component {
                          activeItemIdx={this.state.activeItemIdx}
                          items={this.props.items}
                          summaryParagraphs={this.props.summaryParagraphs} />
-            <div className={styles.tip} style={{left: `${this.state.tipLeft}px`}}></div>
+            <div className={`${styles.tip} ${styles.upperTip}`} style={{left: `${this.state.tipLeft}px`}}></div>
           </div>
           <div className={styles.cellContentCropper}>
+            <div className={`${styles.tip} ${styles.lowerTip}`} style={{left: `${this.state.tipLeft}px`}}></div>
             {commentBlockElem}
           </div>
           <div className={styles.cellContentCropper} style={{height: `${this.state.lowerContentHeight}px`}}>

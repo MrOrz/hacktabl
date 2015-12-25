@@ -50,13 +50,19 @@ $cropping-margin: 10px
 .tip
   position: absolute
   margin-left: $cropping-margin + 2px // manually move left a bit
-  border: 4px solid transparent
-  border-bottom-color: $comment-bg-color
-  border-bottom-width: 6px
-  width: 0
-  height: 0
-  bottom: 0
+  background: unquote("rgb(#{$color-primary})")
+  border-radius: 8px
+  width: 8px
+  height: 8px
   z-index: 2
+  +shadow-2dp
+  // border: 1px solid #fff
+
+.upperTip
+  bottom: -4px
+
+.lowerTip
+  top: -4px
 
 .cellContentCropper:first-child
   margin-top: -$cropping-margin
