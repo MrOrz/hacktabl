@@ -67,6 +67,10 @@ class Header extends React.Component {
 
     let style = {}
     if(this.props.scrollbarSize) {
+      // On desktop when positions are stretched to window width,
+      // we should compensate for scrollbar size on header or it will not align
+      // with table content.
+      //
       style.paddingRight = `${this.props.scrollbarSize}px`
     }
 
