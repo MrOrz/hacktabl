@@ -36,6 +36,9 @@ class Run extends React.Component {
     // Ignore if no any comment to show for this run
     if(this.props.commentIds.length === 0){ return }
     this.props.onClick(this, this.props.commentIds)
+
+    // Prevent propagation to <Paragraph /> onClick.
+    evt.stopPropagation()
   }
 }
 
@@ -58,31 +61,45 @@ Hyperlink.propTypes = Object.assign({}, HYPERLINK_PROPS, {
   onRunClick: PropTypes.func.isRequired
 })
 
-function Paragraph (props) {
-  let childElems = props.children.map((child, idx) => {
-    if(child.href) {
-      return <Hyperlink {...child} key={idx} onRunClick={props.onRunClick} />
-    } else {
-      return <Run {...child} key={idx} onClick={props.onRunClick} />
-    }
-  })
-
-  let classNames = []
-  if(props.type === 'cellItem'){
-    classNames.push(styles.cellItem)
-    if(props.isActive){
-      classNames.push(styles.activeCellItem)
-      childElems.push(<div key="reference">This is some reference</div>)
-    }
+class Paragraph extends PureComponent {
+  constructor(){
+    super()
+    this._handleClick = this._handleClick.bind(this)
   }
 
-  return <div className={classNames.join(' ')}>{childElems}</div>
+  render(){
+    let childElems = this.props.children.map((child, idx) => {
+      if(child.href) {
+        return <Hyperlink {...child} key={idx} onRunClick={this.props.onRunClick} />
+      } else {
+        return <Run {...child} key={idx} onClick={this.props.onRunClick} />
+      }
+    })
+
+    let classNames = []
+    if(this.props.type === 'cellItem'){
+      classNames.push(styles.cellItem)
+      if(this.props.isActive){
+        classNames.push(styles.activeCellItem)
+        childElems.push(<div key="reference">This is some reference</div>)
+      }
+    }
+
+    return <div className={classNames.join(' ')} onClick={this._handleClick}>{childElems}</div>
+  }
+
+  _handleClick() {
+    if(!this.props.onClick){ return }
+    this.props.onClick(this.props.activeIdx)
+  }
 }
 
 Paragraph.propTypes = Object.assign({}, PARAGRAPH_PROPS, {
   onRunClick: PropTypes.func.isRequired,
   type: PropTypes.oneOf(['normal', 'cellItem']),
-  isActive: PropTypes.bool // For type=cellItem
+  isActive: PropTypes.bool, // For type=cellItem
+  onClick: PropTypes.func,
+  activeIdx: PropTypes.number // Key to pass back when onClick() is invoked
 })
 
 Paragraph.defaultProps = {
@@ -125,6 +142,7 @@ class CellContent extends PureComponent {
       return (
         <Paragraph key={idx} type="cellItem"
                    isActive={idx===this.props.activeItemIdx}
+                   onClick={this.props.onItemClick} activeIdx={idx}
                    onRunClick={(runElem, commentIds) => this.props.onRunClick(runElem, commentIds, idx) }
                    {...paragraphProps} />
       )
@@ -151,21 +169,25 @@ class CellContent extends PureComponent {
 
 CellContent.propTypes = Object.assign({}, DATA_CELL_PROPS, {
   activeItemIdx: PropTypes.any,
-  onRunClick: PropTypes.func.isRequired
+  onRunClick: PropTypes.func.isRequired,
+  onItemClick: PropTypes.func.isRequired
 })
+
+const INIITAL_CELL_STATE = {
+  upperContentHeight: null,
+  lowerContentHeight: null,
+  commentIds: [],
+  activeItemIdx: null
+}
 
 export default class Cell extends React.Component {
   constructor() {
     super()
     this._handleRunClick = this._handleRunClick.bind(this)
+    this._handleItemClick = this._handleItemClick.bind(this)
     this._handleClickAway = this._handleClickAway.bind(this)
 
-    this.state = {
-      upperContentHeight: null,
-      lowerContentHeight: null,
-      commentIds: [],
-      activeItemIdx: null
-    }
+    this.state = INIITAL_CELL_STATE
   }
 
   render() {
@@ -179,19 +201,27 @@ export default class Cell extends React.Component {
     }
 
     if(this.state.upperContentHeight === null){
+      // Normal mode, only has one <CellContent />
+      //
       return (
         <div className={styles.cell}>
-          <CellContent ref="content" onRunClick={this._handleRunClick}
+          <CellContent ref="content"
+                       onRunClick={this._handleRunClick}
+                       onItemClick={this._handleItemClick}
                        activeItemIdx={this.state.activeItemIdx}
                        items={this.props.items}
                        summaryParagraphs={this.props.summaryParagraphs} />
         </div>
       )
     }else{
+      // Split mode, has two <CellContent />s and a comment block in between
+      //
       return (
         <div className={styles.cell}>
           <div className={styles.cellContentCropper} style={{height: `${this.state.upperContentHeight}px`}}>
-            <CellContent ref="upperContent" onRunClick={this._handleRunClick}
+            <CellContent ref="upperContent"
+                         onRunClick={this._handleRunClick}
+                         onItemClick={this._handleItemClick}
                          activeItemIdx={this.state.activeItemIdx}
                          items={this.props.items}
                          summaryParagraphs={this.props.summaryParagraphs} />
@@ -200,7 +230,9 @@ export default class Cell extends React.Component {
             {commentBlockElem}
           </div>
           <div className={styles.cellContentCropper} style={{height: `${this.state.lowerContentHeight}px`}}>
-            <CellContent ref="lowerContent" onRunClick={this._handleRunClick}
+            <CellContent ref="lowerContent"
+                         onRunClick={this._handleRunClick}
+                         onItemClick={this._handleItemClick}
                          activeItemIdx={this.state.activeItemIdx}
                          items={this.props.items}
                          summaryParagraphs={this.props.summaryParagraphs}
@@ -209,6 +241,15 @@ export default class Cell extends React.Component {
         </div>
       )
     }
+  }
+
+  _handleItemClick(idx){
+    // Reset all when item is clicked
+    //
+    this.setState(Object.assign({}, INIITAL_CELL_STATE, {
+      activeItemIdx: idx,
+    }))
+    this._setupClickAway()
   }
 
   _handleRunClick(runElem, commentIds=[], activeItemIdx=null) {
@@ -248,6 +289,13 @@ export default class Cell extends React.Component {
       lowerContentHeight: contentRect.bottom - runBottom,
     })
 
+    this._setupClickAway()
+  }
+
+  _setupClickAway() {
+    // Remove click handler before setup to avoid binding the handler twice
+    //
+    document.removeEventListener('click', this._handleClickAway)
     document.addEventListener('click', this._handleClickAway)
   }
 
@@ -256,12 +304,7 @@ export default class Cell extends React.Component {
     //
     if(findDOMNode(this).contains(e.target)) {return}
 
-    this.setState({
-      upperContentHeight: null,
-      lowerContentHeight: null,
-      commentIds: [],
-      activeItemIdx: null
-    })
+    this.setState(INIITAL_CELL_STATE)
 
     document.removeEventListener('click', this._handleClickAway)
   }
