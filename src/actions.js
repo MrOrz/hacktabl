@@ -1,6 +1,7 @@
-import fetch from 'isomorphic-fetch';
-import * as cache from './utils/cache';
-var parser = require('hacktabl-parser');
+import fetch from 'isomorphic-fetch'
+import * as cache from './utils/cache'
+import processTableData from './utils/process-table-data'
+var parser = require('hacktabl-parser')
 
 export const FETCHING_TABLE = 'FETCHING_TABLE';
 export const SET_TABLE = 'SET_TABLE';
@@ -46,6 +47,8 @@ export function fetchAndParseTable(tableId) {
 
     return parser(tableId).then(data => {
       let timestamp = Date.now()
+
+      processTableData(data)
 
       // Update cache
       cache.setTable(tableId, {data, timestamp});
