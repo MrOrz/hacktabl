@@ -7,6 +7,10 @@
   display: flex
   flex-flow: row
 
+  // Cell height should shrink to content size
+  // in order to make click-away work as desired
+  align-items: flex-start
+
 .rowHeader
   will-change: transform
   padding-left: 8px
