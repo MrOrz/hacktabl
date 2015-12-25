@@ -64,7 +64,7 @@ function Hyperlink(props) {
 
 Hyperlink.propTypes = Object.assign({}, HYPERLINK_PROPS, {
   onRunClick: PropTypes.func.isRequired,
-  target: PropTypes.func.string
+  target: PropTypes.string
 })
 
 class Paragraph extends PureComponent {
@@ -195,9 +195,14 @@ CellContent.propTypes = Object.assign({}, DATA_CELL_PROPS, {
 const INIITAL_CELL_STATE = {
   upperContentHeight: null,
   lowerContentHeight: null,
+  tipLeft: null,
   commentIds: [],
   activeItemIdx: null
 }
+
+// Adjust split position manually
+//
+const SPLIT_Y_OFFSET = 2 // px
 
 export default class Cell extends React.Component {
   constructor() {
@@ -244,6 +249,7 @@ export default class Cell extends React.Component {
                          activeItemIdx={this.state.activeItemIdx}
                          items={this.props.items}
                          summaryParagraphs={this.props.summaryParagraphs} />
+            <div className={styles.tip} style={{left: `${this.state.tipLeft}px`}}></div>
           </div>
           <div className={styles.cellContentCropper}>
             {commentBlockElem}
@@ -282,7 +288,7 @@ export default class Cell extends React.Component {
   }
 
   _calculateSplitHeights(runElem, commentIds) {
-    let runBottom = findDOMNode(runElem).getBoundingClientRect().bottom
+    let runRect = findDOMNode(runElem).getBoundingClientRect()
     let clickedContentRef
     if(this.refs.content){
       clickedContentRef = this.refs.content
@@ -292,7 +298,7 @@ export default class Cell extends React.Component {
 
       let upperContentBottom = findDOMNode(this.refs.upperContent).getBoundingClientRect().top + this.state.upperContentHeight
 
-      if(upperContentBottom >= runBottom) {
+      if(upperContentBottom >= runRect.bottom) {
         // Clicked run is at upper content
         clickedContentRef = this.refs.upperContent
       }else {
@@ -304,8 +310,9 @@ export default class Cell extends React.Component {
 
     this.setState({
       commentIds,
-      upperContentHeight: runBottom - contentRect.top,
-      lowerContentHeight: contentRect.bottom - runBottom,
+      tipLeft: runRect.left - contentRect.left,
+      upperContentHeight: runRect.bottom - contentRect.top + SPLIT_Y_OFFSET,
+      lowerContentHeight: contentRect.bottom - runRect.bottom - SPLIT_Y_OFFSET,
     })
 
     this._setupClickAway()

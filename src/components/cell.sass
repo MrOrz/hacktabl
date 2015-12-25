@@ -2,6 +2,7 @@
 
 $cell-padding: 8px
 $cell-bg-color: rgba(#fff, .56)
+$comment-bg-color: #666
 $cell-border-color: rgba(#000, .1)
 $active-cell-extrude-size: 4px
 
@@ -42,6 +43,20 @@ $cropping-margin: 10px
   // which leaves space for activeCellItem & commentBlock's box-shadow.
   margin: 0 -$cropping-margin
   padding: 0 $cropping-margin
+
+  // For tip indicator
+  position: relative
+
+.tip
+  position: absolute
+  margin-left: $cropping-margin + 2px // manually move left a bit
+  border: 4px solid transparent
+  border-bottom-color: $comment-bg-color
+  border-bottom-width: 6px
+  width: 0
+  height: 0
+  bottom: 0
+  z-index: 2
 
 .cellContentCropper:first-child
   margin-top: -$cropping-margin
@@ -125,7 +140,7 @@ $cropping-margin: 10px
 .commentBlock
   padding: $active-cell-extrude-size + $cell-padding
   margin: 0 (-$active-cell-extrude-size)
-  background: #666
+  background: $comment-bg-color
   color: rgba(#fff, .8)
   +shadow-3dp
   will-change: height
