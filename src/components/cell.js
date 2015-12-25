@@ -77,6 +77,10 @@ class Paragraph extends PureComponent {
   render(){
     let childElems = this.props.children.map(this._mapChildToElem())
 
+    if(childElems.length === 0) {
+      return null // No content at all
+    }
+
     let classNames = []
     if(this.props.type === 'cellItem'){
       classNames.push(styles.cellItem)
