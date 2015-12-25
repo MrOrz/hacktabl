@@ -227,6 +227,30 @@ describe('traverse', () => {
 
       expect(iterator.next().done).to.equal(true);
     });
+
+    it('deals with top-level empty row', () => {
+      let iterator = iterateRows([
+        {
+          "paragraphs": [
+            {
+              "level": -1,
+              "children": []
+            }
+          ],
+          "colspan": 1,
+          "cells": ['content!']
+        }
+      ]);
+
+      expect(iterator.next().value).to.eql({
+        headers: [
+          [{
+            level: -1, children: []
+          }]
+        ],
+        cells: ['content!']
+      })
+    })
   });
 
   describe('iterateColumnHeaders', () => {

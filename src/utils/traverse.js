@@ -36,10 +36,12 @@ function* iterateHeaders(nestedHeaders) {
       dfsStack.pop();
     }
 
-    // Only record contexts with non-empty headers in dfsStack
+    // Only record contexts with non-empty headers (which might be caused by rowspan / colspan) in dfsStack.
+    // However if the empty header is top-level, we should still add the header because
+    // users might forgotten to give a header
     //
     let isEmpty = header.paragraphs.length === 1 && header.paragraphs[0].children.length === 0;
-    if(!isEmpty){
+    if(!isEmpty || level === 0){
       dfsStack.push(context);
     }
 
