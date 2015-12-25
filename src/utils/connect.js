@@ -1,4 +1,5 @@
-import {connect} from 'react-redux';
+import {connect} from 'react-redux'
+import {PropTypes} from 'react'
 import {TABLE_WITH_META_TYPE} from './types'
 
 // Add propTypes check & connect to store.
@@ -13,3 +14,13 @@ export function connectToCurrentTable(Component){
     currentTable: state.tables[state.currentTableId] || {}
   }))(Component)
 };
+
+export function connectToCurrentTableConfig(Component) {
+  Component.propTypes = Object.assign({}, Component.propTypes, {
+    currentTableConfig: PropTypes.object.isRequired
+  })
+
+  return connect(state => ({
+    currentTableConfig: (state.tables[state.currentTableId]||{}).data.config || {}
+  }))(Component)
+}
