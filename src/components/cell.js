@@ -114,7 +114,7 @@ class Paragraph extends PureComponent {
         }
       }
 
-      if(this.props.currentTableConfig.EMPHASIZE_NO_REF &&
+      if(this.props.config.EMPHASIZE_NO_REF &&
          this.props.reference.length === 0){
         classNames.push(styles.hasNoRef)
       }
@@ -132,10 +132,10 @@ class Paragraph extends PureComponent {
     return (child, idx) => {
       if(child.href) {
         return <Hyperlink {...child} key={idx} onRunClick={this.props.onRunClick}
-                          target={anchorTarget} config={this.props.currentTableConfig} />
+                          target={anchorTarget} config={this.props.config} />
       } else {
         return <Run {...child} key={idx} onClick={this.props.onRunClick}
-                    config={this.props.currentTableConfig} />
+                    config={this.props.config} />
       }
     }
   }
@@ -146,18 +146,17 @@ Paragraph.propTypes = Object.assign({}, PARAGRAPH_PROPS, {
   type: PropTypes.oneOf(['normal', 'cellItem']),
   isActive: PropTypes.bool, // For type=cellItem
   onClick: PropTypes.func,
-  activeIdx: PropTypes.number // Key to pass back when onClick() is invoked
+  activeIdx: PropTypes.number, // Key to pass back when onClick() is invoked
+  config: CONFIG_TYPE
 })
 
 Paragraph.defaultProps = {
   type: 'normal'
 }
 
-Paragraph = connectToCurrentTableConfig(Paragraph)
-
 function Comment (props){
   let date = new Date(props.date)
-  let typeClassNames = props.currentTableConfig.COMMENT_TYPE_MAP[props.type]
+  let typeClassNames = props.config.COMMENT_TYPE_MAP[props.type]
 
   if(typeClassNames){
     typeClassNames = typeClassNames.map(cls => styles[cls])
@@ -183,8 +182,6 @@ Comment.propTypes = {
   type: PropTypes.string
 }
 
-Comment = connectToCurrentTableConfig(Comment)
-
 // Cannot be a stateless function because we need putting refs on CellContent.
 //
 class CellContent extends PureComponent {
@@ -193,7 +190,7 @@ class CellContent extends PureComponent {
     if(this.props.summaryParagraphs.length>0 &&
        this.props.summaryParagraphs[0].children.length>0){
       let pElems = this.props.summaryParagraphs.map(
-        (paragraph, idx) => <Paragraph key={idx} onRunClick={this.props.onRunClick} {...paragraph} />
+        (paragraph, idx) => <Paragraph key={idx} onRunClick={this.props.onRunClick} config={this.props.config} {...paragraph} />
       )
       summaryParagraphElem = (
         <header className={styles.cellContentHeader}>
@@ -208,6 +205,7 @@ class CellContent extends PureComponent {
                    isActive={idx===this.props.activeItemIdx}
                    onClick={this.props.onItemClick} activeIdx={idx}
                    onRunClick={(runElem, commentIds) => this.props.onRunClick(runElem, commentIds, idx) }
+                   config={this.props.config}
 
                    level={item.level} children={item.children}
                    labels={item.labels} reference={item.ref} />
@@ -222,7 +220,7 @@ class CellContent extends PureComponent {
     }
 
     return (
-      <div className={styles.cellContent} style={this.props.style}>
+      <div className={`${styles.cellContent} ${classNames.join(' ')}`} style={this.props.style}>
         {summaryParagraphElem}
         {listItemElems}
         {elemWhenEmpty}
@@ -234,7 +232,8 @@ class CellContent extends PureComponent {
 CellContent.propTypes = Object.assign({}, DATA_CELL_PROPS, {
   activeItemIdx: PropTypes.any,
   onRunClick: PropTypes.func.isRequired,
-  onItemClick: PropTypes.func.isRequired
+  onItemClick: PropTypes.func.isRequired,
+  config: CONFIG_TYPE
 })
 
 const INIITAL_CELL_STATE = {
@@ -249,7 +248,7 @@ const INIITAL_CELL_STATE = {
 //
 const SPLIT_Y_OFFSET = 2 // px
 
-export default class Cell extends React.Component {
+class Cell extends React.Component {
   constructor() {
     super()
     this._handleRunClick = this._handleRunClick.bind(this)
@@ -264,7 +263,11 @@ export default class Cell extends React.Component {
     if(this.state.commentIds.length > 0){
       commentBlockElem = (
         <div className={styles.commentBlock}>
-          {this.state.commentIds.map(id => <Comment key={id} {...this.props.commentMap[id]} />)}
+          {
+            this.state.commentIds.map(id =>
+              <Comment key={id} {...this.props.commentMap[id]} config={this.props.currentTableConfig} />
+            )
+          }
         </div>
       )
     }
@@ -279,6 +282,7 @@ export default class Cell extends React.Component {
                        onItemClick={this._handleItemClick}
                        activeItemIdx={this.state.activeItemIdx}
                        items={this.props.items}
+                       config={this.props.currentTableConfig}
                        summaryParagraphs={this.props.summaryParagraphs} />
         </div>
       )
@@ -293,6 +297,7 @@ export default class Cell extends React.Component {
                          onItemClick={this._handleItemClick}
                          activeItemIdx={this.state.activeItemIdx}
                          items={this.props.items}
+                         config={this.props.currentTableConfig}
                          summaryParagraphs={this.props.summaryParagraphs} />
             <div className={`${styles.tip} ${styles.upperTip}`} style={{left: `${this.state.tipLeft}px`}}></div>
           </div>
@@ -307,6 +312,7 @@ export default class Cell extends React.Component {
                          activeItemIdx={this.state.activeItemIdx}
                          items={this.props.items}
                          summaryParagraphs={this.props.summaryParagraphs}
+                         config={this.props.currentTableConfig}
                          style={{transform: `translateY(${this.state.upperContentHeight*-1}px)`}} />
           </div>
         </div>
@@ -385,3 +391,5 @@ export default class Cell extends React.Component {
 Cell.propTypes = Object.assign({}, DATA_CELL_PROPS, {
   commentMap: PropTypes.object.isRequired
 })
+
+export default connectToCurrentTableConfig(Cell)
