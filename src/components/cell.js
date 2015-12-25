@@ -118,6 +118,8 @@ Comment.propTypes = {
   type: PropTypes.string
 }
 
+// Cannot be a stateless function because we need putting refs on CellContent.
+//
 class CellContent extends PureComponent {
   render() {
     let summaryParagraphElem = null
@@ -158,10 +160,8 @@ class CellContent extends PureComponent {
     return (
       <div className={styles.cellContent} style={this.props.style}>
         {summaryParagraphElem}
-        <div className={styles.cellContentBody}>
-          {listItemElems}
-          {elemWhenEmpty}
-        </div>
+        {listItemElems}
+        {elemWhenEmpty}
       </div>
     )
   }

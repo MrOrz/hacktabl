@@ -1,6 +1,8 @@
 @import '../sass/_variables.sass'
 
 $cell-padding: 8px
+$cell-bg-color: rgba(#fff, .56)
+$cell-border-color: rgba(#000, .1)
 $active-cell-extrude-size: 4px
 
 .cell
@@ -8,6 +10,7 @@ $active-cell-extrude-size: 4px
   box-sizing: border-box
   padding: $data-cell-gutter
   flex: 1 0 $mobile-column-width
+  transform: translate3d(0,0,0) // Push each cell to layer
 
   @media screen and (min-width: $grid-tablet-breakpoint)
     flex-basis: $tablet-column-width
@@ -16,13 +19,15 @@ $active-cell-extrude-size: 4px
     flex-basis: $desktop-column-width
 
 .cellContent
-  background: #fff
   border-radius: 3px
+  box-sizing: border-box
+  border: 1px solid $cell-border-color
 
 .cellContentHeader
   font-size: 18px
+  background-color: #fff
   padding: $cell-padding
-  border-bottom: 1px solid #eee
+  border-bottom: 1px solid $table-bg
   margin-bottom: 7px
 
 .cellContentHeader:last-child
@@ -50,9 +55,16 @@ $cropping-margin: 10px
 
 .cellItem
   padding: $cell-padding
-  border-top: 1px solid #eee
-  will-change: padding, margin, border-radius
+  border-top: 1px solid $cell-border-color
+  background-color: $cell-bg-color
+  will-change: background-color
+  transition: background-color .1s
+  cursor: pointer
+
   position: relative // For its "before" element
+
+.cellItem:hover
+  background-color: #fff
 
 .cellItem:first-child
   border-top: 0
@@ -76,15 +88,19 @@ $cropping-margin: 10px
   right: -$active-cell-extrude-size
   bottom: -$active-cell-extrude-size
 
+  // Add some visual delimiter
+  //
+  border-top: 1px solid $table-bg
 
 .activeCellItem
+  background-color: #fff
   z-index: 1 // Higher than other cellItems
 
 .activeCellItem:before
   opacity: 1
 
 .hasComment
-  border-bottom: 1px dashed unquote("rgb(#{$color-primary})")
+  border-bottom: 1px dashed unquote("rgb(#{$color-primary-dark})")
 
 .commentBlock
   padding: $active-cell-extrude-size + $cell-padding
@@ -93,7 +109,7 @@ $cropping-margin: 10px
   color: rgba(#fff, .8)
   +shadow-3dp
   will-change: height
-  animation: expand .7s ease-out
+  animation: expand .3s ease-out
 
 @keyframes expand
   0%
