@@ -213,9 +213,15 @@ class CellContent extends PureComponent {
     })
 
     let elemWhenEmpty = null
+    let classNames = []
+
     if(!summaryParagraphElem && listItemElems.length === 0) {
+      classNames.push(styles.isEmpty)
       elemWhenEmpty = (
-        <span>This is empty</span>
+        <span>
+          目前沒有論述。
+          <a href={this.props.config.EDIT_URL}>一起幫忙寫吧！</a>
+        </span>
       )
     }
 

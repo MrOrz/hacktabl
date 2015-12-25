@@ -24,6 +24,13 @@ $active-cell-extrude-size: 4px
   box-sizing: border-box
   border: 1px solid $cell-border-color
 
+  &.isEmpty
+    background: rgba(#000, .05)
+    border: 0
+    border-bottom: 1px solid #fff
+    box-shadow: inset 0 1px 3px rgba(#000, .1)
+    padding: 8px
+
 .cellContentHeader
   font-size: 18px
   background-color: #fff
