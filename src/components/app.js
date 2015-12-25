@@ -44,9 +44,11 @@ class App extends React.Component {
 
   componentDidUpdate() {
     upgradeToMdl(this.refs.layout);
+    this.measureScrollbarSize()
   }
   componentDidMount() {
     upgradeToMdl(this.refs.layout);
+    this.measureScrollbarSize()
   }
 
   onMainScroll(e) {
@@ -61,6 +63,13 @@ class App extends React.Component {
         this._frameRequested = false;
       });
     }
+  }
+
+  measureScrollbarSize() {
+    let mainElem = findDOMNode(this.refs.main)
+    this.props.dispatch(setUIState({
+      scrollbarSize: mainElem.getBoundingClientRect().width - mainElem.clientWidth
+    }))
   }
 }
 

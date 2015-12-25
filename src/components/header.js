@@ -65,6 +65,11 @@ class Header extends React.Component {
       )
     }
 
+    let style = {}
+    if(this.props.scrollbarSize) {
+      style.paddingRight = `${this.props.scrollbarSize}px`
+    }
+
     return (
       <header className="mdl-layout__header">
         <div className="mdl-layout-icon"></div>
@@ -75,7 +80,7 @@ class Header extends React.Component {
             <i className="material-icons">more_vert</i>
           </button>
         </div>
-        <div className={`mdl-layout__header-row ${styles.positionRow}`}>
+        <div className={`mdl-layout__header-row ${styles.positionRow}`} style={style}>
           <div className={styles.headerContainer} style={{
             transform: `translate3d(-${this.props.scrollLeft}px, 0, 0)`
           }}>
@@ -97,7 +102,8 @@ class Header extends React.Component {
 Header.propTypes = {
   table: TABLE_TYPE,
   config: CONFIG_TYPE,
-  scrollLeft: PropTypes.number
+  scrollLeft: PropTypes.number,
+  scrollbarSize: PropTypes.number
 }
 
 export default connect(state => state.ui)(Header)
