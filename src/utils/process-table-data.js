@@ -7,7 +7,7 @@
 // [!] suffix: EXCLAMATION_INDICATOR
 // [⋯] suffix: MORE_INDICATOR
 //
-const DEFAULT_LABEL_CLASSNAME_MAP = {
+const DEFAULT_COMMENT_TYPE_MAP = {
   '出處爭議': ['GRAY', 'RED_UNDERLINE', 'DOTTED_UNDERLINE', 'EXCLAMATION_INDICATOR'],
   '質疑': ['RED_UNDERLINE'],
   '補充說明': ['GREEN_UNDERLINE'],
@@ -25,13 +25,13 @@ export default function processTableData(data) {
 
   let labelClassnameMap = {}
   Object.keys(data.config, key => {
-    let m = key.trim().match(/^LABEL\[([^]]+)\]$/)
+    let m = key.trim().match(/^COMMENT\[([^]]+)\]$/)
     if(m){
       labelClassnameMap[m[1]] = data.config[key].split(' ')
     }
   })
 
-  data.config.LABEL_CLASS_NAME_MAP = Object.assign({}, DEFAULT_LABEL_CLASSNAME_MAP, labelClassnameMap)
+  data.config.COMMENT_TYPE_MAP = Object.assign({}, DEFAULT_COMMENT_TYPE_MAP, labelClassnameMap)
 
   return data
 }

@@ -30,9 +30,9 @@ class Run extends React.Component {
     // Styling by comment types
     this.props.commentIds.forEach(commentId => {
       let type = this.props.commentMap[commentId].type
-      let labelClassNames = this.props.config.LABEL_CLASS_NAME_MAP[type]
-      if(labelClassNames){
-        let hashedClassNames = labelClassNames.map(cls => styles[cls])
+      let typeClassNames = this.props.config.COMMENT_TYPE_MAP[type]
+      if(typeClassNames){
+        let hashedClassNames = typeClassNames.map(cls => styles[cls])
         classNames.push.apply(classNames, hashedClassNames)
       }else{
         classNames.push(styles.hasUnidentifiedComment)
@@ -157,7 +157,7 @@ Paragraph = connectToCurrentTableConfig(Paragraph)
 
 function Comment (props){
   let date = new Date(props.date)
-  let typeClassNames = props.currentTableConfig.LABEL_CLASS_NAME_MAP[props.type]
+  let typeClassNames = props.currentTableConfig.COMMENT_TYPE_MAP[props.type]
 
   if(typeClassNames){
     typeClassNames = typeClassNames.map(cls => styles[cls])
