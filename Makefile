@@ -1,5 +1,5 @@
 SRC=src
-GIT=git@github.com:g0v/hacktabl.git
+GIT=git@github.com:mrorz/hacktabl-staging.git
 DEPLOY_BRANCH=gh-pages
 
 .PHONY: build push clean deploy
