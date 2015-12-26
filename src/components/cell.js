@@ -8,8 +8,6 @@ import PureComponent from 'react-pure-render/component'
 import styles from './cell.sass';
 import {DATA_CELL_PROPS, RUN_PROPS, HYPERLINK_PROPS, PARAGRAPH_PROPS, CONFIG_TYPE} from '../utils/types'
 
-console.log('STYLES', styles)
-
 class Run extends React.Component {
   constructor() {
     super()
