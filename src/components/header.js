@@ -4,6 +4,7 @@ import styles from './header.sass';
 import upgradeToMdl from '../utils/upgrade';
 import PureComponent from 'react-pure-render/component';
 import {connect} from 'react-redux'
+import {setUIState} from '../actions'
 import {iterateColumnHeaders, concatAllParagraphs} from '../utils/traverse';
 import {HEADER_CELL_TYPE, TABLE_TYPE, CONFIG_TYPE} from '../utils/types'
 
@@ -100,6 +101,7 @@ class Header extends React.Component {
   }
   componentDidMount() {
     upgradeToMdl(this);
+    this.props.dispatch(setUIState({headerHeight: findDOMNode(this).clientHeight}))
   }
 }
 

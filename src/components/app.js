@@ -52,13 +52,16 @@ class App extends React.Component {
   }
 
   onMainScroll(e) {
-    this._scrollLeft = findDOMNode(this.refs.main).scrollLeft
+    let mainElem = findDOMNode(this.refs.main)
+    this._scrollLeft = mainElem.scrollLeft
+    this._scrollTop = mainElem.scrollTop
 
     if(!this._frameRequested){
       this._frameRequested = true;
       requestAnimationFrame(() => {
         this.props.dispatch(setUIState({
-          scrollLeft: this._scrollLeft
+          scrollLeft: this._scrollLeft,
+          scrollTop: this._scrollTop
         }))
         this._frameRequested = false;
       });

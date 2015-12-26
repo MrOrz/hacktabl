@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
 import styles from './drawer.sass';
 import PureComponent from 'react-pure-render/component';
+import {connect} from 'react-redux'
+import {setUIState} from '../actions'
 import {connectToCurrentTable} from '../utils/connect';
 import {iterateRows, concatAllParagraphs} from '../utils/traverse';
 import upgradeToMdl from '../utils/upgrade';
@@ -13,6 +15,10 @@ class RowTitleItem extends React.Component {
 
     if(this.props.isTop){
       classNames.push(styles.isTop);
+    }
+
+    if(this.props.isActive){
+      classNames.push(styles.isActive)
     }
 
     return (
@@ -31,6 +37,8 @@ class RowTitleItem extends React.Component {
   }
 }
 
+RowTitleItem = connect()(RowTitleItem)
+
 class RowTitleDivider extends PureComponent {
   render () {
     return (
@@ -39,11 +47,11 @@ class RowTitleDivider extends PureComponent {
   }
 }
 
-
-export class RowTitleNav extends PureComponent {
+class RowTitleNav extends PureComponent {
   render () {
     let items = [];
     let lastDividerText = null;
+    let titleItemIdx = 0
 
     for(let row of iterateRows(this.props.rows)){
       let content = concatAllParagraphs(row.headers[row.headers.length-1]);
@@ -60,54 +68,35 @@ export class RowTitleNav extends PureComponent {
         }
       }
       items.push(
-        <RowTitleItem key={content} isTop={row.headers.length === 1}>
+        <RowTitleItem key={content} isTop={row.headers.length === 1}
+                      itemIdx={titleItemIdx}
+                      isActive={this.props.activeRowId === titleItemIdx}>
           {content}
         </RowTitleItem>
       )
 
+      titleItemIdx += 1
     }
-
 
     return (
       <ul className={styles.list}>
         {items}
       </ul>
     );
-
-    function traverse(rows, titleStack) {
-      rows.forEach((row) => {
-        if(row.children){ // Has children, not in the most detailed header yet
-          titleStack.push(row);
-          traverse(row.children, titleStack);
-          titleStack.pop();
-        }else{ // All row header is inside titleStack
-
-          // Print delimiter if the header is nested and not previously printed
-          // yet.
-          //
-          if(titleStack.length > 0 && lastTitleHeader !== titleStack[titleStack.length-1]){
-            items.push(
-              <RowTitleDivider key={""+Math.random()} headers={titleStack.slice(0)} />
-            );
-            lastTitleHeader = titleStack[titleStack.length-1];
-          }
-
-          items.push(
-            <RowTitleItem key={""+Math.random()} paragraphs={row.paragraphs} isTop={titleStack.length === 0}/>
-          )
-        }
-      })
-    }
   }
 }
 
 RowTitleNav.propTypes = {
-  rows: PropTypes.arrayOf(HEADER_CELL_TYPE)
+  rows: PropTypes.arrayOf(HEADER_CELL_TYPE),
+  activeRowId: PropTypes.number
 };
 
 RowTitleNav.defaultProps = {
   rows: []
 };
+
+RowTitleNav = connect(state => ({activeRowId: state.ui.activeRowId}))(RowTitleNav)
+export {RowTitleNav}
 
 export default class Drawer extends React.Component {
   render () {

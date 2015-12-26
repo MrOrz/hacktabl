@@ -51,7 +51,11 @@ export function currentTableId(state='', action) {
 }
 
 export function ui(state={
-  scrollLeft: 0
+  scrollLeft: 0,
+  scrollTop: 0,
+  scrollingTo: null,
+  headerHeight: 0,
+  activeRowId: -1
 }, action) {
   switch(action.type){
     case SET_UI:
