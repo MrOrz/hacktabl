@@ -22,3 +22,17 @@
 .isDivider:first-child
   border-top: 0
   margin-top: 0
+
+.loading
+  padding: 64px 0
+  text-align: center
+
+  .loadingScaler
+    display: inline-block
+    transform: scale(2)
+
+.errorMessage
+  padding: 16px
+
+  h3
+    +typo-display-1($colorContrast: true)

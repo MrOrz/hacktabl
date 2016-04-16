@@ -12,7 +12,7 @@ function table(state = {
       return Object.assign({}, state, {isFetching: action.payload.data});
     case FETCHING_ERROR:
       return Object.assign({}, state, {
-        lastError: action.payload.data
+        lastError: action.payload.error instanceof Error ? action.payload.error.message : action.payload.error,
       });
 
     case SET_TABLE:

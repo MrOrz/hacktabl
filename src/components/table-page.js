@@ -8,7 +8,17 @@ import styles from './table-page.sass';
 import {loadTable, navigateToTable, setUIState} from '../actions';
 import {connectToCurrentTable} from '../utils/connect';
 import {iterateRows, concatAllParagraphs} from '../utils/traverse';
+import upgradeToMdl from '../utils/upgrade';
 import Cell from './cell'
+
+class Loading extends React.Component {
+  componentDidMount() {
+    upgradeToMdl(this.refs.elem)
+  }
+  render() {
+    return <div ref="elem" className="mdl-spinner mdl-js-spinner is-active"></div>
+  }
+}
 
 class RowHeader extends React.Component {
   render() {
@@ -46,8 +56,23 @@ class TablePage extends React.Component {
 
   render() {
     let rowElems = []
+    if(this.props.currentTable.lastError) {
+      return (
+        <div className={styles.errorMessage}>
+          <h3>Oops, something is wrong</h3>
+          <p>{this.props.currentTable.lastError}</p>
+        </div>
+      )
+    }
+
     if(!(this.props.currentTable.data && this.props.currentTable.data.table)) {
-      return <div>Loading...</div>
+      return (
+        <div className={styles.loading}>
+          <div className={styles.loadingScaler}>
+            <Loading />
+          </div>
+        </div>
+      )
     }
 
     let lastAncestorText = null
