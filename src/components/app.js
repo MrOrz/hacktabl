@@ -29,7 +29,7 @@ class App extends React.Component {
     return (
       <div>
         <div ref="layout" className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
-          <Header table={table} config={config} />
+          <Header table={table} config={config} tableId={this.props.currentTableId} />
           <Drawer table={table} config={config} />
           <main className={`mdl-layout__content ${styles.main}`}
                 onScroll={this.onMainScroll}

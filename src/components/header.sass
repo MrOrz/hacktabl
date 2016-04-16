@@ -7,6 +7,10 @@ $header-cell-padding: 8px
   padding: 0 $data-cell-gutter
   overflow: hidden
 
+// Boost specificity over material-design desktop style
+.headerNav.headerNav
+  margin-right: -40px
+
 .headerContainer
   will-change: transform
   min-width: 100%

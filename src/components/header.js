@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {Link} from 'react-router';
 import {findDOMNode} from 'react-dom';
 import styles from './header.sass';
 import upgradeToMdl from '../utils/upgrade';
@@ -81,9 +82,24 @@ class Header extends React.Component {
         <div className="mdl-layout__header-row">
           <span className="mdl-layout__title">{title}</span>
           <div className="mdl-layout-spacer"></div>
-          <button className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-            <i className="material-icons">more_vert</i>
-          </button>
+          <nav className={`mdl-navigation ${styles.headerNav}`}>
+            <span className="mdl-navigation__link">
+              {
+                this.props.config && this.props.config.EDIT_URL ? (
+                  <a className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                  href={this.props.config.EDIT_URL}>
+                  <i className="material-icons">mode_edit</i>
+                  </a>
+                ) : ''
+              }
+            </span>
+            <span className="mdl-navigation__link">
+              <Link className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                    to={`/${this.props.tableId}/about`}>
+                <i className="material-icons">info_outline</i>
+              </Link>
+            </span>
+          </nav>
         </div>
         <div className={`mdl-layout__header-row ${styles.positionRow}`} style={style}>
           <div className={styles.headerContainer} style={{
@@ -106,6 +122,7 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
+  tableId: PropTypes.string,
   table: TABLE_TYPE,
   config: CONFIG_TYPE,
   scrollLeft: PropTypes.number,
