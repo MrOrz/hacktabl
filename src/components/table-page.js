@@ -87,15 +87,14 @@ class TablePage extends React.Component {
       this._handleScroll()
     }
 
-    if(this.props.scrollingTo === null && nextProps.scrollingTo !== null) {
+    if(this.props.scrollingTo !== nextProps.scrollingTo) {
       this._scrollTo(nextProps.scrollingTo)
     }
   }
 
   _scrollTo(idx) {
     let sectionElem = findDOMNode(this.refs[`row${idx}`])
-
-    sectionElem.scrollTop()
+    sectionElem.scrollIntoView()
   }
 
   _handleScroll() {
@@ -103,7 +102,7 @@ class TablePage extends React.Component {
     let sectionRef
 
     while(sectionRef = this.refs[`row${idx}`]) {
-      let isReached = findDOMNode(sectionRef).getBoundingClientRect().top < this.props.headerHeight
+      let isReached = findDOMNode(sectionRef).getBoundingClientRect().top <= this.props.headerHeight
 
       if(!isReached) {
         this.props.dispatch(setUIState({

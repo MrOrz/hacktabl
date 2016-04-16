@@ -10,6 +10,11 @@ import upgradeToMdl from '../utils/upgrade';
 import {TABLE_TYPE, HEADER_CELL_TYPE, CONFIG_TYPE} from '../utils/types';
 
 class RowTitleItem extends React.Component {
+  constructor() {
+    super()
+    this._handleClick = this._handleClick.bind(this)
+  }
+
   render () {
     let classNames = ['mdl-js-button mdl-js-ripple-effect', styles.item];
 
@@ -22,10 +27,17 @@ class RowTitleItem extends React.Component {
     }
 
     return (
-      <li className={classNames.join(' ')}>
+      <li className={classNames.join(' ')} onClick={this._handleClick}>
         {this.props.children}
       </li>
     );
+  }
+
+  _handleClick() {
+    // Scroll to that!
+    this.props.dispatch(setUIState({
+      scrollingTo: this.props.itemIdx
+    }))
   }
 
   componentDidMount() {
