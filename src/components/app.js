@@ -44,7 +44,7 @@ class App extends React.Component {
 
   componentDidUpdate() {
     upgradeToMdl(this.refs.layout);
-    this.measureScrollbarSize()
+    // this.measureScrollbarSize()
   }
   componentDidMount() {
     upgradeToMdl(this.refs.layout);
