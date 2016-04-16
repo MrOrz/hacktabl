@@ -52,6 +52,12 @@ class TablePage extends React.Component {
     this._scrollTo(this.props.scrollingTo)
   }
 
+  componentWillUnmount() {
+    this.props.dispatch(setUIState({
+      activeRowId: -1
+    }))
+  }
+
   render() {
     let rowElems = []
     if(this.props.currentTable.lastError) {
