@@ -128,7 +128,7 @@ $cropping-margin: 10px
   &.isActive:before
     opacity: 1
 
-  &.hasNoRef
+  &.hasNoRef .run
     color: #ccc
     text-decoration: line-through
 
@@ -192,6 +192,9 @@ $cropping-margin: 10px
     position: absolute
     left: $margin
     top: $margin
+
+  .hasNoRef &:before
+    content: 'warning'
 
 .commentBlock
   padding: $active-cell-extrude-size + $cell-padding 0

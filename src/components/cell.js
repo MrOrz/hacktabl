@@ -109,6 +109,12 @@ class Paragraph extends PureComponent {
               {refChildElems}
             </div>
           )
+        } else {
+          childElems.push(
+            <div key="reference" className={styles.reference}>
+              這個項目缺少出處。若您知道出處，<a href={this.props.config.EDIT_URL}>請按這裡補充</a>。
+            </div>
+          )
         }
       }
 
