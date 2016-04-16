@@ -94,17 +94,6 @@ if( isProduction ){
 } else {
   webpackCfg.devtool = '#source-map';
 
-  // Hot module replacement setup
-  // Ref:
-  // http://webpack.github.io/docs/webpack-dev-server.html#combining-with-an-existing-server
-  // http://gaearon.github.io/react-hot-loader/#enabling-hot-module-replacement
-  //
-  webpackCfg.entry.index = [
-    'webpack-dev-server/client?localhost:' + DEVSERVER_PORT,
-    'webpack/hot/only-dev-server',
-    webpackCfg.entry.index
-  ];
-
   webpackCfg.devServer = {
     host: '0.0.0.0',
     port: DEVSERVER_PORT,
@@ -128,7 +117,6 @@ if( isProduction ){
     }
   };
 
-  webpackCfg.plugins.push(new webpack.HotModuleReplacementPlugin());
   webpackCfg.plugins.push(new webpack.DefinePlugin({
     DEBUG: true,
     GOOGLE_API_KEY: JSON.stringify('AIzaSyBgewvC_6aFKXJnnzX0y2tp0xPM2ZLdk_w') // allows http://localhost:5000/*
