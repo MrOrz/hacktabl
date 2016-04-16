@@ -9,7 +9,6 @@ DEPLOY_BRANCH=gh-pages
 build: clean
 	NODE_ENV=production npm run build
 	cp favicon* build/
-	cp vendor/* build/
 	cp index.html build/
 	cp index.html build/404.html
 	cp config/CNAME build/CNAME
