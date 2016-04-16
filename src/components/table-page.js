@@ -123,7 +123,9 @@ class TablePage extends React.Component {
 
   _scrollTo(idx) {
     let sectionElem = findDOMNode(this.refs[`row${idx}`])
-    sectionElem.scrollIntoView()
+    if(sectionElem){
+      sectionElem.scrollIntoView()
+    }
   }
 
   _handleScroll() {
