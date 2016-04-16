@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import {TABLE_WITH_META_TYPE} from '../utils/types'
 import styles from './table-page.sass';
-import {loadTable, navigateToTable, setUIState} from '../actions';
+import {setUIState} from '../actions';
 import {connectToCurrentTable} from '../utils/connect';
 import {iterateRows, concatAllParagraphs} from '../utils/traverse';
 import upgradeToMdl from '../utils/upgrade';
@@ -49,9 +49,7 @@ class TablePage extends React.Component {
   }
 
   componentDidMount() {
-    let tableId = this.props.params.tableId;
-    this.props.dispatch(navigateToTable(tableId))
-    this.props.dispatch(loadTable(tableId))
+    this._scrollTo(this.props.scrollingTo)
   }
 
   render() {

@@ -7,11 +7,12 @@ import {TABLE_WITH_META_TYPE} from './types'
 //
 export function connectToCurrentTable(Component){
   Component.propTypes = Object.assign({}, Component.propTypes, {
-    currentTable: TABLE_WITH_META_TYPE.isRequired
+    currentTable: TABLE_WITH_META_TYPE.isRequired,
   })
 
   return connect(state => ({
-    currentTable: state.tables[state.currentTableId] || {}
+    currentTable: state.tables[state.currentTableId] || {},
+    currentTableId: state.currentTableId,
   }))(Component)
 };
 
@@ -21,6 +22,7 @@ export function connectToCurrentTableConfig(Component) {
   })
 
   return connect(state => ({
-    currentTableConfig: (state.tables[state.currentTableId]||{}).data.config || {}
+    currentTableConfig: ((state.tables[state.currentTableId]||{}).data || {}).config || {},
+    currentTableId: state.currentTableId,
   }))(Component)
 }

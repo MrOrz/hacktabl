@@ -1,4 +1,4 @@
-@import '../../node_modules/material-design-lite/src/_variables.scss'
+@import '../sass/_variables.sass'
 
 $drawer-padding: 16px
 $item-border: 1px solid rgba(#000, .12)
@@ -8,6 +8,13 @@ $item-border: 1px solid rgba(#000, .12)
   $title-height: 56px
   line-height: $line-height
   padding: ($title-height - $line-height)/2 $drawer-padding
+  color: rgba(#000, .56)
+  text-decoration: none
+
+  &.isActive
+    color: $green
+    font-weight: bold
+
 
 .list
   list-style-type: none

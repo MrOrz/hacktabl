@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {findDOMNode} from 'react-dom';
+import {Link, PropTypes as RouterPropTypes} from 'react-router';
 import styles from './drawer.sass';
 import PureComponent from 'react-pure-render/component';
 import {connect} from 'react-redux'
@@ -34,6 +35,9 @@ class RowTitleItem extends React.Component {
   }
 
   _handleClick() {
+
+    this.context.history.pushState(null, `/${this.props.tableId}`)
+
     // Scroll to that!
     this.props.dispatch(setUIState({
       scrollingTo: this.props.itemIdx
@@ -48,8 +52,9 @@ class RowTitleItem extends React.Component {
     upgradeToMdl(this);
   }
 }
+RowTitleItem.contextTypes = { history: RouterPropTypes.history }
 
-RowTitleItem = connect()(RowTitleItem)
+RowTitleItem = connect(state => ({tableId: state.currentTableId}))(RowTitleItem)
 
 class RowTitleDivider extends PureComponent {
   render () {
@@ -107,10 +112,13 @@ RowTitleNav.defaultProps = {
   rows: []
 };
 
-RowTitleNav = connect(state => ({activeRowId: state.ui.activeRowId}))(RowTitleNav)
+RowTitleNav = connect(state => ({
+  activeRowId: state.ui.activeRowId,
+  currentTableId: state.currentTableId,
+}))(RowTitleNav)
 export {RowTitleNav}
 
-export default class Drawer extends React.Component {
+class Drawer extends React.Component {
   render () {
     if(!this.props.config){
       return (
@@ -121,7 +129,13 @@ export default class Drawer extends React.Component {
     }
     let titleElem = "";
     if(this.props.config && this.props.config.TITLE){
-      titleElem = <span className={`mdl-layout__title ${styles.title}`}>{this.props.config.TITLE}</span>
+      titleElem = (
+        <Link
+          className={`mdl-layout__title ${styles.title} ${this.props.activeRowId === -1 ? styles.isActive : ''}`}
+          to={`/${this.props.tableId}/about`}>
+          {this.props.config.TITLE}
+        </Link>
+      )
     }
 
     let navElem = "";
@@ -151,5 +165,10 @@ export default class Drawer extends React.Component {
 
 Drawer.propTypes = {
   table: TABLE_TYPE,
-  config: CONFIG_TYPE
+  config: CONFIG_TYPE,
 };
+
+export default connect(state => ({
+  tableId: state.currentTableId,
+  activeRowId: state.ui.activeRowId
+}))(Drawer)
